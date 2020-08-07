@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:startup_namer/ui/screens/BrewPrint.dart';
-import 'package:startup_namer/ui/screens/CoffeeSelection.dart';
-import 'package:startup_namer/ui/screens/Graph.dart';
-import 'package:startup_namer/ui/screens/MachineSelection.dart';
-import 'package:startup_namer/ui/screens/Rating.dart';
+import 'package:flupresso/ui/screens/BrewPrint.dart';
+import 'package:flupresso/ui/screens/CoffeeSelection.dart';
+import 'package:flupresso/ui/screens/Graph.dart';
+import 'package:flupresso/ui/screens/MachineSelection.dart';
+import 'package:flupresso/ui/screens/Rating.dart';
 import 'Theme.dart' as Theme;
 import 'tab.dart';
 

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:startup_namer/ui/Theme.dart' as Theme;
-import 'package:startup_namer/ui/tab.dart';
+import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/tab.dart';
 
 class CoffeeSelection extends StatelessWidget with TabEntry {
   @override

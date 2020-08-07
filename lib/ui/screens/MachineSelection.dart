@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:startup_namer/ui/Theme.dart' as Theme;
-import 'package:startup_namer/ui/tab.dart';
+import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/tab.dart';
 
 class MachineSelection extends StatelessWidget with TabEntry {
   @override
