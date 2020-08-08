@@ -1,51 +1,135 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flupresso/model/CoffeeSelectionService.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class CoffeeSelection extends StatelessWidget with TabEntry {
+class CoffeeSelection with TabEntry {
+  @override
+  Widget getTabContent() {
+    return CoffeeSelectionTab();
+  }
+
+  @override
+  Widget getImage() {
+    return CoffeeSelectionImage();
+  }
+
+  @override
+  Widget getScreen() {
+    return null;
+  }
+}
+
+class CoffeeSelectionImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+    return Center(
+      child: CachedNetworkImage(
+        imageUrl:
+            'https://images.squarespace-cdn.com/content/5d318463e8d6c50001d160a6/1563541579731-9HESYR1NGT92L2CWRJ3X/elemenza_Logo_BoA.png?format=1500w&content-type=image%2Fpng',
+        width: 65,
+        height: 65,
+        color: Theme.Colors.primaryColor,
+        fit: BoxFit.scaleDown,
       ),
     );
   }
+}
 
-  String getRoaster() {
-    return "Elemenza";
-  }
+class CoffeeSelectionTab extends StatefulWidget {
+  _CoffeeSelectionTabState createState() => _CoffeeSelectionTabState();
+}
 
-  String getCoffee() {
-    return "El pabloza";
-  }
+class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
+  final TextEditingController _typeAheadRoasterController =
+      TextEditingController();
+  final TextEditingController _typeAheadCoffeeController =
+      TextEditingController();
 
-  String getOrigin() {
-    return "Some Country";
-  }
-
-  String getPrice() {
-    return "12.34€";
-  }
+  String _selectedRoaster;
+  String _selectedCoffee;
 
   @override
-  Widget getTabContent(BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 95.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Text(getRoaster(), style: Theme.TextStyles.tabPrimary),
-          new Text(getCoffee(), style: Theme.TextStyles.tabSecondary),
+          TypeAheadFormField(
+            textFieldConfiguration: TextFieldConfiguration(
+              decoration: InputDecoration(
+                labelText: 'Roaster',
+                labelStyle: Theme.TextStyles.tabLabel,
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+              ),
+              style: Theme.TextStyles.tabPrimary,
+              controller: this._typeAheadRoasterController,
+            ),
+            suggestionsCallback: (pattern) async {
+              return CitiesService.getRoasterSuggestions(pattern);
+            },
+            itemBuilder: (context, suggestion) {
+              return ListTile(
+                title: Text(suggestion),
+              );
+            },
+            transitionBuilder: (context, suggestionsBox, controller) {
+              return suggestionsBox;
+            },
+            onSuggestionSelected: (suggestion) {
+              this._typeAheadRoasterController.text = suggestion;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please select a roaster';
+              }
+            },
+            onSaved: (value) => this._selectedRoaster = value,
+          ),
+          TypeAheadFormField(
+            textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  labelText: 'Coffee',
+                  labelStyle: Theme.TextStyles.tabLabel,
+                  contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+                controller: this._typeAheadCoffeeController,
+                style: Theme.TextStyles.tabSecondary),
+            suggestionsCallback: (pattern) async {
+              return CitiesService.getCoffeeSuggestions(
+                  pattern, _selectedRoaster);
+            },
+            itemBuilder: (context, suggestion) {
+              return ListTile(
+                title: Text(suggestion),
+              );
+            },
+            transitionBuilder: (context, suggestionsBox, controller) {
+              return suggestionsBox;
+            },
+            onSuggestionSelected: (suggestion) {
+              this._typeAheadCoffeeController.text = suggestion;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please select a coffee';
+              }
+            },
+            onSaved: (value) => this._selectedCoffee = value,
+          ),
           new Container(
               color: Theme.Colors.tabHighlightColor,
               width: 24.0,
@@ -55,33 +139,14 @@ class CoffeeSelection extends StatelessWidget with TabEntry {
             children: <Widget>[
               new Icon(Icons.location_on,
                   size: 14.0, color: Theme.Colors.goodColor),
-              new Text(getOrigin(), style: Theme.TextStyles.tabTertiary),
+              new Text("Dummy Origin", style: Theme.TextStyles.tabTertiary),
               new Container(width: 24.0),
               new Icon(Icons.flight_land,
                   size: 14.0, color: Theme.Colors.goodColor),
-              new Text(getPrice(), style: Theme.TextStyles.tabTertiary),
+              new Text("10€", style: Theme.TextStyles.tabTertiary),
             ],
-          )
+          ),
         ],
-      ),
-    );
-  }
-
-  @override
-  Widget getScreen(BuildContext context) {
-    return this;
-  }
-
-  @override
-  Widget getImage(BuildContext context) {
-    return Center(
-      child: CachedNetworkImage(
-        imageUrl:
-            'https://images.squarespace-cdn.com/content/5d318463e8d6c50001d160a6/1563541579731-9HESYR1NGT92L2CWRJ3X/elemenza_Logo_BoA.png?format=1500w&content-type=image%2Fpng',
-        width: 65,
-        height: 65,
-        color: Theme.Colors.primaryColor,
-        fit: BoxFit.scaleDown,
       ),
     );
   }

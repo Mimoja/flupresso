@@ -21,12 +21,12 @@ class Rating extends StatelessWidget with TabEntry {
   }
 
   @override
-  Widget getScreen(BuildContext context) {
+  Widget getScreen() {
     return this;
   }
 
   @override
-  Widget getTabContent(BuildContext context) {
+  Widget getTabContent() {
     return Container(
       margin: const EdgeInsets.only(left: 95.0),
       child: Column(
@@ -56,7 +56,7 @@ class Rating extends StatelessWidget with TabEntry {
   }
 
   @override
-  Widget getImage(BuildContext context) {
+  Widget getImage() {
     return Center(
       child: new Icon(
         Icons.check_circle,

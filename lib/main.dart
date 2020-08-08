@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'ui/homepage.dart';
-import 'settings.dart';
+import 'model/settings.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(

@@ -2,7 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
 
-class BrewPrint extends StatelessWidget with TabEntry {
+class BrewPrint with TabEntry {
+  @override
+  Widget getScreen() {
+    return BrewPrintScreen();
+  }
+
+  @override
+  Widget getImage() {
+    return Center(
+      child: new Icon(
+        Icons.local_cafe,
+        size: 45.0,
+        color: Theme.Colors.primaryColor,
+      ),
+    );
+  }
+
+  @override
+  Widget getTabContent() {
+    return BrewPrintTab();
+  }
+}
+
+class BrewPrintScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +42,9 @@ class BrewPrint extends StatelessWidget with TabEntry {
       ),
     );
   }
+}
 
+class BrewPrintTab extends StatelessWidget {
   String getGramsIn() {
     return "18 grams in";
   }
@@ -37,12 +62,7 @@ class BrewPrint extends StatelessWidget with TabEntry {
   }
 
   @override
-  Widget getScreen(BuildContext context) {
-    return this;
-  }
-
-  @override
-  Widget getTabContent(BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 95.0),
       child: Column(
@@ -67,17 +87,6 @@ class BrewPrint extends StatelessWidget with TabEntry {
             ],
           )
         ],
-      ),
-    );
-  }
-
-  @override
-  Widget getImage(BuildContext context) {
-    return Center(
-      child: new Icon(
-        Icons.local_cafe,
-        size: 45.0,
-        color: Theme.Colors.primaryColor,
       ),
     );
   }

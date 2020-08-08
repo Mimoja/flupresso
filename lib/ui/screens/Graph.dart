@@ -1,9 +1,30 @@
-import 'dart:ui';
-
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
+
+class Graph with TabEntry {
+  @override
+  Widget getScreen() {
+    return GraphScreen();
+  }
+
+  @override
+  Widget getTabContent() {
+    return GraphTab();
+  }
+
+  @override
+  Widget getImage() {
+    return Center(
+      child: new Icon(
+        Icons.trending_up,
+        size: 55.0,
+        color: Theme.Colors.primaryColor,
+      ),
+    );
+  }
+}
 
 class ShotInsightPoint {
   final double seconds;
@@ -13,29 +34,7 @@ class ShotInsightPoint {
   ShotInsightPoint(this.seconds, this.pressure, this.flow);
 }
 
-class Graph extends StatelessWidget with TabEntry {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget getScreen(BuildContext context) {
-    return this;
-  }
-
+class GraphTab extends StatelessWidget {
   static List<charts.Series<ShotInsightPoint, double>> _createSampleData() {
     final data = [
       new ShotInsightPoint(0.04, 0.04, 0.1),
@@ -86,7 +85,7 @@ class Graph extends StatelessWidget with TabEntry {
   }
 
   @override
-  Widget getTabContent(BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,14 +151,22 @@ class Graph extends StatelessWidget with TabEntry {
       ),
     );
   }
+}
 
+class GraphScreen extends StatelessWidget {
   @override
-  Widget getImage(BuildContext context) {
-    return Center(
-      child: new Icon(
-        Icons.trending_up,
-        size: 55.0,
-        color: Theme.Colors.primaryColor,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
       ),
     );
   }

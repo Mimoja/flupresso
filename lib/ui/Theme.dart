@@ -17,7 +17,7 @@ class Colors {
   static Color tabShadowColor =
       HSLColor.fromColor(tabBackground).withLightness(1).toColor();
 
-  static Color tabHighlightColor = secondaryColor;
+  static const Color tabHighlightColor = secondaryColor;
 }
 
 class Dimens {
@@ -44,6 +44,12 @@ class TextStyles {
 
   static const TextStyle tabTertiary = const TextStyle(
       color: Colors.primaryColor,
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w300,
+      fontSize: 16.0);
+
+  static const TextStyle tabLabel = const TextStyle(
+      color: Colors.tabHighlightColor,
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,
       fontSize: 16.0);

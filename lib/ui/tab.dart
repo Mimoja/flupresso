@@ -2,9 +2,9 @@ import 'Theme.dart' as Theme;
 import 'package:flutter/material.dart';
 
 abstract class TabEntry {
-  Widget getScreen(BuildContext context);
-  Widget getImage(BuildContext context);
-  Widget getTabContent(BuildContext context);
+  Widget getScreen();
+  Widget getImage();
+  Widget getTabContent();
 }
 
 class CoffeeTab extends StatelessWidget {
@@ -26,7 +26,7 @@ class CoffeeTab extends StatelessWidget {
           color: Theme.Colors.tabImageBackground,
           shape: BoxShape.circle,
         ),
-        child: entry.getImage(context),
+        child: entry.getImage(),
       ),
     );
 
@@ -39,21 +39,18 @@ class CoffeeTab extends StatelessWidget {
       ),
       child: Container(
         margin: const EdgeInsets.only(top: 16.0, left: 0.0, bottom: 20.0),
-        child: Row(
-          children: [
-            entry.getTabContent(context),
-          ],
-        ),
+        child: entry.getTabContent(),
       ),
     );
 
-    return new Container(
-      margin: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-      child: new FlatButton(
+    Widget screen = entry.getScreen();
+    Widget inner;
+    if (screen != null) {
+      inner = FlatButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => entry.getScreen(context)),
+            MaterialPageRoute(builder: (context) => entry.getScreen()),
           );
         },
         hoverColor: Theme.Colors.primaryColor,
@@ -63,7 +60,21 @@ class CoffeeTab extends StatelessWidget {
             thumbnail,
           ],
         ),
-      ),
+      );
+    } else {
+      inner = FlatButton(
+        onPressed: null,
+        child: Stack(
+          children: <Widget>[
+            card,
+            thumbnail,
+          ],
+        ),
+      );
+    }
+    return Container(
+      margin: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+      child: inner,
     );
   }
 }
