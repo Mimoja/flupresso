@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flupresso/model/Coffee.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -41,9 +39,6 @@ class MachineService extends ChangeNotifier {
     final response = await http.get('https://coffee.mimoja.de/api/v1/coffees');
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-
       List result = await jsonDecode(response.body);
       if (result == null) {
         return List();
@@ -51,9 +46,7 @@ class MachineService extends ChangeNotifier {
       List coffees = result.map((e) => Coffee.fromJson(e)).toList();
       return coffees;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load Vendors');
     }
   }
 
@@ -61,9 +54,6 @@ class MachineService extends ChangeNotifier {
     final response = await http.get('https://coffee.mimoja.de/api/v1/coffees');
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-
       List result = await jsonDecode(response.body);
       if (result == null) {
         return List();
@@ -71,9 +61,7 @@ class MachineService extends ChangeNotifier {
       List coffees = result.map((e) => Coffee.fromJson(e)).toList();
       return coffees;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load Machines');
     }
   }
 }

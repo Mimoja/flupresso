@@ -5,23 +5,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class CitiesService extends ChangeNotifier {
-  static final List<String> cities = [
-    'Beirut',
-    'Damascus',
-    'San Fransisco',
-    'Rome',
-    'Los Angeles',
-    'Madrid',
-    'Bali',
-    'Barcelona',
-    'Paris',
-    'Bucharest',
-    'New York City',
-    'Philadelphia',
-    'Sydney',
-  ];
-
+class CoffeeSelectionService extends ChangeNotifier {
   static Future<List<String>> getRoasterSuggestions(String query) async {
     List<Coffee> matches = await fetchCoffees();
 

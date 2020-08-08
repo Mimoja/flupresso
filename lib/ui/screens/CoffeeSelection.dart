@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flupresso/model/CoffeeSelectionService.dart';
+import 'package:flupresso/model/suggestionServices/CoffeeSelectionService.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
@@ -74,7 +74,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
               controller: this._typeAheadRoasterController,
             ),
             suggestionsCallback: (pattern) async {
-              return CitiesService.getRoasterSuggestions(pattern);
+              return CoffeeSelectionService.getRoasterSuggestions(pattern);
             },
             itemBuilder: (context, suggestion) {
               return ListTile(
@@ -109,7 +109,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
                 controller: this._typeAheadCoffeeController,
                 style: Theme.TextStyles.tabSecondary),
             suggestionsCallback: (pattern) async {
-              return CitiesService.getCoffeeSuggestions(
+              return CoffeeSelectionService.getCoffeeSuggestions(
                   pattern, _selectedRoaster);
             },
             itemBuilder: (context, suggestion) {
