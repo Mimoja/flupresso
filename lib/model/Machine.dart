@@ -1,15 +1,18 @@
 class Machine {
-  final String manufacturer;
-  final String model;
+  final String vendor;
+  final String name;
+  final String imageURL;
+
   final int id;
 
-  Machine({this.id, this.manufacturer, this.model});
+  Machine({this.id, this.vendor, this.name, this.imageURL});
 
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
       id: json['id'],
-      manufacturer: json['manufacturer'],
-      model: json['model'],
+      vendor: json['vendor'],
+      name: json['name'],
+      imageURL: json['imageurl.String'],
     );
   }
 }

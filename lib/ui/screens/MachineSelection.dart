@@ -76,7 +76,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
               controller: this._typeAheadManufacturerController,
             ),
             suggestionsCallback: (pattern) async {
-              return MachineService.getManufacturersSuggestions(pattern);
+              return MachineService.getVendorSuggestions(pattern);
             },
             itemBuilder: (context, suggestion) {
               return ListTile(
@@ -112,7 +112,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
                 controller: this._typeAheadModelController,
                 style: Theme.TextStyles.tabSecondary),
             suggestionsCallback: (pattern) async {
-              return MachineService.getModelSuggestions(
+              return MachineService.getModellSuggestions(
                   pattern, _selectedManufacturer);
             },
             itemBuilder: (context, suggestion) {
