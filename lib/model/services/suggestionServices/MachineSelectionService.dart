@@ -1,4 +1,3 @@
-import 'package:flupresso/model/Coffee.dart';
 import 'package:flupresso/model/Machine.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';

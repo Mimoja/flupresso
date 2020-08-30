@@ -1,5 +1,4 @@
-import 'package:flupresso/model/suggestionServices/CoffeeSelectionService.dart';
-import 'package:flupresso/model/suggestionServices/MachineSelectionService.dart';
+import 'package:flupresso/model/services/suggestionServices/MachineSelectionService.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';

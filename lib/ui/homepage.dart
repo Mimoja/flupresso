@@ -1,3 +1,5 @@
+import 'package:flupresso/model/services/ble/bluetoothService.dart';
+import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flupresso/ui/screens/BrewPrint.dart';
@@ -12,8 +14,6 @@ class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-  final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> devicesList = new List<BluetoothDevice>();
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,23 +22,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool available = false;
 
-  final FlutterBlue flutterBlue = FlutterBlue.instance;
-  final List<BluetoothDevice> devicesList = new List<BluetoothDevice>();
-
   BluetoothDevice _connectedDevice;
   List<BluetoothService> _services;
 
-  _addDeviceTolist(final BluetoothDevice device) {
-    if (!widget.devicesList.contains(device)) {
-      setState(() {
-        widget.devicesList.add(device);
-      });
-    }
-  }
-
-  ListView _buildListViewOfDevices() {
+  ListView _buildListViewOfDevices(List<BluetoothDevice> devicesList) {
     List<Container> containers = new List<Container>();
-    for (BluetoothDevice device in widget.devicesList) {
+    for (BluetoothDevice device in devicesList) {
       containers.add(
         Container(
           height: 50,
@@ -52,28 +41,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              FlatButton(
-                  color: Colors.blue,
-                  child: Text(
-                    'Connect',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () async {
-                    widget.flutterBlue.stopScan();
-                    try {
-                      await device.connect();
-                    } catch (e) {
-                      if (e.code != 'already_connected') {
-                        throw e;
-                      }
-                    } finally {
-                      _services = await device.discoverServices();
-                    }
-
-                    setState(() {
-                      _connectedDevice = device;
-                    });
-                  }),
             ],
           ),
         ),
@@ -120,29 +87,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    widget.flutterBlue.connectedDevices
-        .asStream()
-        .listen((List<BluetoothDevice> devices) {
-      for (BluetoothDevice device in devices) {
-        _addDeviceTolist(device);
-      }
-    });
-    widget.flutterBlue.scanResults.listen((List<ScanResult> results) {
-      for (ScanResult result in results) {
-        _addDeviceTolist(result.device);
-      }
-    });
-    widget.flutterBlue.startScan();
   }
 
   @override
   Widget build(BuildContext context) {
-    ListView list;
-    if (_connectedDevice == null) {
-      list = _buildListViewOfDevices();
-    } else {
-      list = _buildConnectDeviceView();
-    }
+    BLEService ble = getIt<BLEService>();
+
+    ListView list = _buildListViewOfDevices(ble.devices);
+
     return Scaffold(
       backgroundColor: Theme.Colors.tabPageBackground,
       body: ListView(

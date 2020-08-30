@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flupresso/model/suggestionServices/CoffeeSelectionService.dart';
+import 'package:flupresso/model/services/suggestionServices/CoffeeSelectionService.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
