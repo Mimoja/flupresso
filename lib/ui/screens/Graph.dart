@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flupresso/model/services/ble/scaleService.dart';
+import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
@@ -34,7 +38,18 @@ class ShotInsightPoint {
   ShotInsightPoint(this.seconds, this.pressure, this.flow);
 }
 
-class GraphTab extends StatelessWidget {
+class GraphTab extends StatefulWidget {
+  @override
+  _GraphState createState() => _GraphState();
+}
+
+class _GraphState extends State<GraphTab> {
+  ScaleService scale;
+
+  _GraphState() {
+    scale = getIt<ScaleService>();
+  }
+
   static List<charts.Series<ShotInsightPoint, double>> _createSampleData() {
     final data = [
       new ShotInsightPoint(0.04, 0.04, 0.1),
@@ -97,6 +112,34 @@ class GraphTab extends StatelessWidget {
               children: <Widget>[
                 new Text("8.2 bars", style: Theme.TextStyles.tabPrimary),
                 new Text("2.1 ml / s", style: Theme.TextStyles.tabSecondary),
+                StreamBuilder<WeightMeassurement>(
+                    stream: scale.stream,
+                    initialData: WeightMeassurement(0, 0),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<WeightMeassurement> snapshot) {
+                      return Column(
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Text("Weight: ",
+                                  style: Theme.TextStyles.tabSecondary),
+                              Text(
+                                  snapshot.data.weight.toStringAsFixed(2) + "g",
+                                  style: Theme.TextStyles.tabSecondary),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Flow:     ",
+                                  style: Theme.TextStyles.tabSecondary),
+                              Text(
+                                  snapshot.data.flow.toStringAsFixed(2) + "g/s",
+                                  style: Theme.TextStyles.tabSecondary)
+                            ],
+                          ),
+                        ],
+                      );
+                    }),
                 new Container(
                     color: Theme.Colors.tabHighlightColor,
                     width: 24.0,
