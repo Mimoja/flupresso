@@ -46,7 +46,8 @@ class BLEService extends ChangeNotifier {
   void _checkdevice(Peripheral device) async {
     if (!await device.isConnected()) {
       log("Removing device");
-      bleManager.startPeripheralScan();
+      _devicesList.remove(device);
+      bleManager.startPeripheralScan().listen(deviceScanListener);
     }
   }
 
@@ -60,7 +61,7 @@ class BLEService extends ChangeNotifier {
       }
       if (device.name != null && device.name.startsWith("DE1")) {
         log("Creating DE1 machine!");
-        DE1(device);
+        DE1(device).addListener(() => _checkdevice(device));
       }
       _devicesList.add(device);
       notifyListeners();

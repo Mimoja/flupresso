@@ -4,11 +4,6 @@ import 'package:flupresso/ui/tab.dart';
 
 class BrewPrint with TabEntry {
   @override
-  Widget getScreen() {
-    return BrewPrintScreen();
-  }
-
-  @override
   Widget getImage() {
     return Center(
       child: new Icon(

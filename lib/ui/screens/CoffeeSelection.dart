@@ -15,11 +15,6 @@ class CoffeeSelection with TabEntry {
   Widget getImage() {
     return CoffeeSelectionImage();
   }
-
-  @override
-  Widget getScreen() {
-    return null;
-  }
 }
 
 class CoffeeSelectionImage extends StatelessWidget {

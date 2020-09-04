@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flupresso/model/services/ble/coffeeService.dart';
 import 'package:flupresso/model/services/ble/scaleService.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,6 @@ import 'package:flupresso/ui/Theme.dart' as Theme;
 import 'package:flupresso/ui/tab.dart';
 
 class Graph with TabEntry {
-  @override
-  Widget getScreen() {
-    return GraphScreen();
-  }
-
   @override
   Widget getTabContent() {
     return GraphTab();
@@ -45,38 +41,40 @@ class GraphTab extends StatefulWidget {
 
 class _GraphState extends State<GraphTab> {
   ScaleService scale;
+  CoffeeService coffeeService;
 
   _GraphState() {
     scale = getIt<ScaleService>();
+    coffeeService = getIt<CoffeeService>();
   }
 
-  static List<charts.Series<ShotInsightPoint, double>> _createSampleData() {
-    final data = [
-      new ShotInsightPoint(0.04, 0.04, 0.1),
-      new ShotInsightPoint(0.197, 0.02, 0.3),
-      new ShotInsightPoint(0.243, 0.03, 1.2),
-      new ShotInsightPoint(0.443, 0.02, 2.2),
-      new ShotInsightPoint(0.643, 0.03, 3.2),
-      new ShotInsightPoint(0.843, 0.02, 4.01),
-      new ShotInsightPoint(1.043, 0.04, 4.05),
-      new ShotInsightPoint(1.243, 0.02, 4.01),
-      new ShotInsightPoint(1.543, 0.03, 3.99),
-      new ShotInsightPoint(2.543, 0.1, 4.05),
-      new ShotInsightPoint(3.543, 0.22, 3.99),
-      new ShotInsightPoint(4.543, 1.02, 3.85),
-      new ShotInsightPoint(5.543, 3.02, 1.6),
-      new ShotInsightPoint(6.543, 5.02, 1.5),
-      new ShotInsightPoint(7.543, 8.02, 1.5),
-      new ShotInsightPoint(8.543, 8.702, 1.5),
-      new ShotInsightPoint(9.543, 8.82, 1.6),
-      new ShotInsightPoint(10.543, 9.02, 1.6),
-      new ShotInsightPoint(11.543, 9.12, 1.7),
-      new ShotInsightPoint(12.543, 8.82, 1.8),
-      new ShotInsightPoint(13.543, 8.52, 1.9),
-      new ShotInsightPoint(14.543, 8.45, 2.0),
-      new ShotInsightPoint(15.55, 8.2, 2.1),
-    ];
+  @override
+  initState() {
+    coffeeService.addListener(updateCoffee);
+    super.initState();
+  }
 
+  updateCoffee() => setState(() {
+        ShotState shot = coffeeService.state.shot;
+        if (coffeeService.state.coffeeState == CoffeeState.idle) {
+          inShot = false;
+          return;
+        }
+        if (!inShot) {
+          inShot = true;
+          dataPoints.clear();
+          baseTime = shot.sampleTime;
+        }
+
+        dataPoints.add(ShotInsightPoint(
+            shot.sampleTime - baseTime, shot.groupPressure, shot.groupFlow));
+      });
+
+  bool inShot = false;
+  List<ShotInsightPoint> dataPoints = List();
+  double baseTime;
+
+  List<charts.Series<ShotInsightPoint, double>> _createData() {
     return [
       new charts.Series<ShotInsightPoint, double>(
         id: 'Pressure',
@@ -85,7 +83,7 @@ class _GraphState extends State<GraphTab> {
         colorFn: (_, __) =>
             charts.ColorUtil.fromDartColor(Theme.Colors.tabBackground),
         strokeWidthPxFn: (_, __) => 3,
-        data: data,
+        data: dataPoints,
       ),
       new charts.Series<ShotInsightPoint, double>(
         id: 'Flow',
@@ -94,13 +92,81 @@ class _GraphState extends State<GraphTab> {
         colorFn: (_, __) =>
             charts.ColorUtil.fromDartColor(Theme.Colors.secondaryColor),
         strokeWidthPxFn: (_, __) => 3,
-        data: data,
+        data: dataPoints,
       ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    //TODO test for scale conneciton
+    Widget insights;
+    if (coffeeService.state.shot != null) {
+      insights = Column(
+        children: [
+          Row(
+            children: [
+              Text("State: ", style: Theme.TextStyles.tabSecondary),
+              Text(
+                  coffeeService.state.coffeeState
+                      .toString()
+                      .substring(12)
+                      .toUpperCase(),
+                  style: Theme.TextStyles.tabPrimary),
+            ],
+          ),
+          Row(
+            children: [
+              Text("Pressure: ", style: Theme.TextStyles.tabSecondary),
+              Text(
+                  coffeeService.state.shot.groupPressure.toStringAsFixed(1) +
+                      " bar",
+                  style: Theme.TextStyles.tabPrimary),
+            ],
+          ),
+          Row(
+            children: [
+              Text("Flow: ", style: Theme.TextStyles.tabSecondary),
+              Text(
+                  coffeeService.state.shot.groupFlow.toStringAsFixed(2) +
+                      " ml/s",
+                  style: Theme.TextStyles.tabPrimary),
+            ],
+          ),
+          Row(
+            children: [
+              Text("Mix Temp: ", style: Theme.TextStyles.tabSecondary),
+              Text(coffeeService.state.shot.mixTemp.toStringAsFixed(2) + " °C",
+                  style: Theme.TextStyles.tabPrimary),
+            ],
+          ),
+          Row(
+            children: [
+              Text("Head Temp: ", style: Theme.TextStyles.tabSecondary),
+              Text(coffeeService.state.shot.headTemp.toStringAsFixed(2) + " °C",
+                  style: Theme.TextStyles.tabPrimary),
+            ],
+          ),
+        ],
+      );
+    } else {
+      insights =
+          Text("Machine is not connected", style: Theme.TextStyles.tabPrimary);
+    }
+    /*
+      new Row(
+                  children: <Widget>[
+                    new Icon(Icons.hourglass_empty,
+                        size: 14.0, color: Theme.Colors.primaryColor),
+                    new Text("15 sec", style: Theme.TextStyles.tabTertiary),
+                    new Container(width: 24.0),
+                    new Icon(Icons.location_on,
+                        size: 14.0, color: Theme.Colors.secondaryColor),
+                    new Text("93.6°C", style: Theme.TextStyles.tabTertiary),
+                  ],
+                ),
+    */
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,8 +176,7 @@ class _GraphState extends State<GraphTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Text("8.2 bars", style: Theme.TextStyles.tabPrimary),
-                new Text("2.1 ml / s", style: Theme.TextStyles.tabSecondary),
+                insights,
                 StreamBuilder<WeightMeassurement>(
                     stream: scale.stream,
                     initialData: WeightMeassurement(0, 0),
@@ -145,17 +210,6 @@ class _GraphState extends State<GraphTab> {
                     width: 24.0,
                     height: 1.0,
                     margin: const EdgeInsets.symmetric(vertical: 8.0)),
-                new Row(
-                  children: <Widget>[
-                    new Icon(Icons.hourglass_empty,
-                        size: 14.0, color: Theme.Colors.primaryColor),
-                    new Text("15 sec", style: Theme.TextStyles.tabTertiary),
-                    new Container(width: 24.0),
-                    new Icon(Icons.location_on,
-                        size: 14.0, color: Theme.Colors.secondaryColor),
-                    new Text("93.6°C", style: Theme.TextStyles.tabTertiary),
-                  ],
-                ),
               ],
             ),
           ),
@@ -172,7 +226,7 @@ class _GraphState extends State<GraphTab> {
               borderRadius: new BorderRadius.circular(8.0),
             ),
             child: charts.LineChart(
-              _createSampleData(),
+              _createData(),
               animate: true,
               behaviors: [
                 // Define one domain and two measure annotations configured to render
@@ -191,25 +245,6 @@ class _GraphState extends State<GraphTab> {
             height: 10,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class GraphScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
       ),
     );
   }

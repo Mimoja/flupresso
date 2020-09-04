@@ -2,7 +2,6 @@ import 'Theme.dart' as Theme;
 import 'package:flutter/material.dart';
 
 abstract class TabEntry {
-  Widget getScreen();
   Widget getImage();
   Widget getTabContent();
 }
@@ -43,35 +42,16 @@ class CoffeeTab extends StatelessWidget {
       ),
     );
 
-    Widget screen = entry.getScreen();
-    Widget inner;
-    if (screen != null) {
-      inner = FlatButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => entry.getScreen()),
-          );
-        },
-        hoverColor: Theme.Colors.primaryColor,
-        child: Stack(
-          children: <Widget>[
-            card,
-            thumbnail,
-          ],
-        ),
-      );
-    } else {
-      inner = FlatButton(
-        onPressed: null,
-        child: Stack(
-          children: <Widget>[
-            card,
-            thumbnail,
-          ],
-        ),
-      );
-    }
+    Widget inner = FlatButton(
+      onPressed: null,
+      child: Stack(
+        children: <Widget>[
+          card,
+          thumbnail,
+        ],
+      ),
+    );
+
     return Container(
       margin: const EdgeInsets.only(top: 16.0, bottom: 8.0),
       child: inner,

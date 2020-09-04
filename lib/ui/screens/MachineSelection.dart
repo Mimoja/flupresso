@@ -14,11 +14,6 @@ class MachineSelection with TabEntry {
   }
 
   @override
-  Widget getScreen() {
-    return null;
-  }
-
-  @override
   Widget getTabContent() {
     return MachineSelectionTab();
   }

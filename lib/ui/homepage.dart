@@ -1,12 +1,10 @@
-import 'package:flupresso/model/services/ble/bluetoothService.dart';
-import 'package:flupresso/service_locator.dart';
+import 'package:flupresso/ui/screens/DeviceChooser.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/screens/BrewPrint.dart';
 import 'package:flupresso/ui/screens/CoffeeSelection.dart';
 import 'package:flupresso/ui/screens/Graph.dart';
 import 'package:flupresso/ui/screens/MachineSelection.dart';
 import 'package:flupresso/ui/screens/Rating.dart';
-import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 import 'Theme.dart' as Theme;
 import 'tab.dart';
 
@@ -22,37 +20,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool available = false;
 
-  ListView _buildListViewOfDevices(List<Peripheral> devicesList) {
-    List<Container> containers = new List<Container>();
-    for (Peripheral device in devicesList) {
-      containers.add(
-        Container(
-          height: 50,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                        device.name == null ? '(unknown device)' : device.name),
-                    Text(device.identifier.toString()),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      children: <Widget>[
-        ...containers,
-      ],
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -60,10 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    BLEService ble = getIt<BLEService>();
-
-    ListView list = _buildListViewOfDevices(ble.devices);
-
     return Scaffold(
       backgroundColor: Theme.Colors.tabPageBackground,
       body: ListView(
@@ -73,10 +36,7 @@ class _HomePageState extends State<HomePage> {
           CoffeeTab(BrewPrint()),
           CoffeeTab(Graph()),
           CoffeeTab(Rating()),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 300),
-            child: list,
-          ),
+          CoffeeTab(DeviceChooser()),
           Container(
             height: 40,
           ),

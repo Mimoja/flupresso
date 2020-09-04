@@ -55,7 +55,7 @@ class AcaiaScale extends ChangeNotifier {
   List<int> commandBuffer = List();
   Timer _heartBeatTimer;
 
-  AcaiaScale(@required this.device) {
+  AcaiaScale(this.device) {
     scaleService = getIt<ScaleService>();
 
     device

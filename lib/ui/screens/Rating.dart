@@ -21,11 +21,6 @@ class Rating extends StatelessWidget with TabEntry {
   }
 
   @override
-  Widget getScreen() {
-    return this;
-  }
-
-  @override
   Widget getTabContent() {
     return Container(
       margin: const EdgeInsets.only(left: 95.0),
