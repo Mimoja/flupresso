@@ -1,6 +1,6 @@
 {
-    "name": "startup_namer",
-    "short_name": "startup_namer",
+    "name": "flupresso",
+    "short_name": "flupresso",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

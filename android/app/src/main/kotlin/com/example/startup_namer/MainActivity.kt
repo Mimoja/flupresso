@@ -1,4 +1,4 @@
-package com.example.startup_namer
+package de.mimoja.flupresso
 
 import io.flutter.embedding.android.FlutterActivity
 
