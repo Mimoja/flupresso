@@ -4,9 +4,23 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CoffeeSelectionService extends ChangeNotifier {
-  static Future<List<String>> getRoasterSuggestions(String query) async {
+class CoffeeService extends ChangeNotifier {
+  Coffee currentCoffee = null;
+  List<Coffee> knownCoffees = List();
+  SharedPreferences prefs;
+
+  CoffeeService() {
+    init();
+  }
+
+  init() async {
+    prefs = await SharedPreferences.getInstance();
+    //TODO read coffee
+  }
+
+  Future<List<String>> getRoasterSuggestions(String query) async {
     List<Coffee> matches = await fetchCoffees();
 
     if (matches.length == 0) {
@@ -21,7 +35,7 @@ class CoffeeSelectionService extends ChangeNotifier {
     return matches.map((e) => e.roaster).toList();
   }
 
-  static Future<List<String>> getCoffeeSuggestions(
+  Future<List<String>> getCoffeeSuggestions(
       String query, String roaster) async {
     List<Coffee> matches = await fetchCoffees();
 
@@ -40,11 +54,7 @@ class CoffeeSelectionService extends ChangeNotifier {
     return matches.map((e) => e.name).toList();
   }
 
-  void notify() {
-    notifyListeners();
-  }
-
-  static Future<List<Coffee>> fetchCoffees() async {
+  Future<List<Coffee>> fetchCoffees() async {
     final response = await http.get('https://coffee.mimoja.de/api/v1/coffees');
 
     if (response.statusCode == 200) {

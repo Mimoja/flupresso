@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:flupresso/model/services/ble/coffeeService.dart';
+import 'package:flupresso/model/services/ble/MachineService.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
@@ -133,9 +133,11 @@ class DE1 extends ChangeNotifier {
   };
 
   final Peripheral device;
+
+  //TODO do connection tracking
   PeripheralConnectionState _state;
 
-  CoffeeService service = getIt<CoffeeService>();
+  EspressoMachineService service = getIt<EspressoMachineService>();
 
   bool mmrAvailable = true;
 
@@ -184,16 +186,16 @@ class DE1 extends ChangeNotifier {
 
     switch (state) {
       case 0x04: // 4 Making espresso
-        service.setState(CoffeeState.espresso);
+        service.setState(EspressoMachineState.espresso);
         break;
       case 0x05: // 5 Making steam
-        service.setState(CoffeeState.espresso);
+        service.setState(EspressoMachineState.espresso);
         break;
       case 0x06: // 6 Making hot water
-        service.setState(CoffeeState.espresso);
+        service.setState(EspressoMachineState.espresso);
         break;
       default:
-        service.setState(CoffeeState.idle);
+        service.setState(EspressoMachineState.idle);
         break;
     }
   }
@@ -207,11 +209,7 @@ class DE1 extends ChangeNotifier {
   void waterLevelNotification(ByteData value) {
     var waterlevel = value.getUint16(0);
     var waterThreshold = value.getUint16(2);
-    /*log("Waterlevel is: " +
-        waterlevel.toString() +
-        " limti: " +
-        waterThreshold.toString());
-        */
+    service.setWaterLevel(WaterLevel(waterlevel, waterThreshold));
   }
 
   void parseVersion(ByteData value) {
@@ -240,68 +238,64 @@ class DE1 extends ChangeNotifier {
   }
 
   void shotSampleNotification(ByteData r) {
-    var SampleTime = 100 * (r.getUint16(0)) / (50 * 2);
-    var GroupPressure = r.getUint16(2) / (1 << 12);
-    var GroupFlow = r.getUint16(4) / (1 << 12);
-    var MixTemp = r.getUint16(6) / (1 << 8);
-    var HeadTemp =
+    var sampleTime = 100 * (r.getUint16(0)) / (50 * 2);
+    var groupPressure = r.getUint16(2) / (1 << 12);
+    var groupFlow = r.getUint16(4) / (1 << 12);
+    var mixTemp = r.getUint16(6) / (1 << 8);
+    var headTemp =
         ((r.getUint8(8) << 16) + (r.getUint8(9) << 8) + (r.getUint8(10))) /
             (1 << 16);
-    var SetMixTemp = r.getUint16(11) / (1 << 8);
-    var SetHeadTemp = r.getUint16(13) / (1 << 8);
-    var SetGroupPressure = r.getUint8(15) / (1 << 4);
-    var SetGroupFlow = r.getUint8(16) / (1 << 4);
-    var FrameNumber = r.getUint8(17);
-    var SteamTemp = r.getUint8(18);
+    var setMixTemp = r.getUint16(11) / (1 << 8);
+    var setHeadTemp = r.getUint16(13) / (1 << 8);
+    var setGroupPressure = r.getUint8(15) / (1 << 4);
+    var setGroupFlow = r.getUint8(16) / (1 << 4);
+    var frameNumber = r.getUint8(17);
+    var steamTemp = r.getUint8(18);
 
-/*
-    log("SampleTime = " + SampleTime.toString());
-    log("GroupPressure = " + GroupPressure.toString());
-    log("GroupFlow = " + GroupFlow.toString());
-    log("MixTemp = " + MixTemp.toString());
-    log("HeadTemp = " + HeadTemp.toString());
-    log("SetMixTemp = " + SetMixTemp.toString());
-    log("SetHeadTemp = " + SetHeadTemp.toString());
-    log("SetGroupPressure = " + SetGroupPressure.toString());
-    log("SetGroupFlow = " + SetGroupFlow.toString());
-    log("FrameNumber = " + FrameNumber.toString());
-    log("SteamTemp = " + SteamTemp.toString());
-*/
-
-    service.setShot(ShotState(SampleTime, GroupPressure, GroupFlow, MixTemp,
-        HeadTemp, SteamTemp, FrameNumber));
+    service.setShot(ShotState(
+        sampleTime,
+        groupPressure,
+        groupFlow,
+        mixTemp,
+        headTemp,
+        setMixTemp,
+        setHeadTemp,
+        setGroupPressure,
+        setGroupFlow,
+        frameNumber,
+        steamTemp));
   }
 
   void parseShotSetting(ByteData r) {
-    var SteamBits = r.getUint8(0);
-    var TargetSteamTemp = r.getUint8(1);
-    var TargetSteamLength = r.getUint8(2);
-    var TargetWaterTemp = r.getUint8(3);
-    var TargetWaterVolume = r.getUint8(4);
-    var TargetWaterLength = r.getUint8(5);
-    var TargetEspressoVolume = r.getUint8(6);
-    var TargetGroupTemp = r.getUint16(7) / (1 << 8);
+    var steamBits = r.getUint8(0);
+    var targetSteamTemp = r.getUint8(1);
+    var targetSteamLength = r.getUint8(2);
+    var targetWaterTemp = r.getUint8(3);
+    var targetWaterVolume = r.getUint8(4);
+    var targetWaterLength = r.getUint8(5);
+    var targetEspressoVolume = r.getUint8(6);
+    var targetGroupTemp = r.getUint16(7) / (1 << 8);
 
-    log("SteamBits = " + SteamBits.toRadixString(16));
-    log("TargetSteamTemp = " + TargetSteamTemp.toRadixString(16));
-    log("TargetSteamLength = " + TargetSteamLength.toRadixString(16));
-    log("TargetWaterTemp = " + TargetWaterTemp.toRadixString(16));
-    log("TargetWaterVolume = " + TargetWaterVolume.toRadixString(16));
-    log("TargetWaterLength = " + TargetWaterLength.toRadixString(16));
-    log("TargetEspressoVolume = " + TargetEspressoVolume.toRadixString(16));
-    log("TargetGroupTemp = " + TargetGroupTemp.toString());
+    log("SteamBits = " + steamBits.toRadixString(16));
+    log("TargetSteamTemp = " + targetSteamTemp.toRadixString(16));
+    log("TargetSteamLength = " + targetSteamLength.toRadixString(16));
+    log("TargetWaterTemp = " + targetWaterTemp.toRadixString(16));
+    log("TargetWaterVolume = " + targetWaterVolume.toRadixString(16));
+    log("TargetWaterLength = " + targetWaterLength.toRadixString(16));
+    log("TargetEspressoVolume = " + targetEspressoVolume.toRadixString(16));
+    log("TargetGroupTemp = " + targetGroupTemp.toString());
   }
 
   void mmrNotification(ByteData value) {
     log("Got mmr notification");
   }
 
-  void get_ghc_mode() {
+  void get ghcMode {
     log("Reading group head control mode");
     mmrRead(0x803820, 0);
   }
 
-  void get_ghc_is_installed() {
+  void get ghcInstalled {
     log("Reading whether the group head controller is installed or not");
     mmrRead(0x80381C, 0);
   }
@@ -355,7 +349,7 @@ class DE1 extends ChangeNotifier {
         enableNotification(Endpoint.ReadFromMMR, mmrNotification);
         enableNotification(Endpoint.WriteToMMR, mmrNotification);
 
-        get_ghc_is_installed();
+        ghcInstalled;
 
         return;
       case PeripheralConnectionState.disconnected:

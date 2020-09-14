@@ -20,6 +20,7 @@ class BLEService extends ChangeNotifier {
 
   void init() async {
     await bleManager.createClient();
+
     bleManager.observeBluetoothState().listen(btStateListener);
     startScanning();
   }

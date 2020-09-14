@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flupresso/model/services/suggestionServices/CoffeeSelectionService.dart';
+import 'package:flupresso/model/services/state/CoffeeService.dart';
+import 'package:flupresso/model/services/state/MachineService.dart';
+import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flupresso/ui/Theme.dart' as Theme;
-import 'package:flupresso/ui/tab.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class CoffeeSelection with TabEntry {
+class CoffeeSelection {
   @override
   Widget getTabContent() {
     return CoffeeSelectionTab();
@@ -46,6 +47,16 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
   String _selectedRoaster;
   String _selectedCoffee;
 
+  CoffeeService coffeeService;
+  MachineService machineService;
+
+  @override
+  void initState() {
+    super.initState();
+    coffeeService = getIt<CoffeeService>();
+    machineService = getIt<MachineService>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,7 +80,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
               controller: this._typeAheadRoasterController,
             ),
             suggestionsCallback: (pattern) async {
-              return CoffeeSelectionService.getRoasterSuggestions(pattern);
+              return coffeeService.getRoasterSuggestions(pattern);
             },
             itemBuilder: (context, suggestion) {
               return ListTile(
@@ -104,7 +115,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
                 controller: this._typeAheadCoffeeController,
                 style: Theme.TextStyles.tabSecondary),
             suggestionsCallback: (pattern) async {
-              return CoffeeSelectionService.getCoffeeSuggestions(
+              return coffeeService.getCoffeeSuggestions(
                   pattern, _selectedRoaster);
             },
             itemBuilder: (context, suggestion) {
@@ -126,7 +137,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
             onSaved: (value) => this._selectedCoffee = value,
           ),
           new Container(
-              color: Theme.Colors.tabHighlightColor,
+              color: Theme.Colors.backgroundColor,
               width: 24.0,
               height: 1.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0)),

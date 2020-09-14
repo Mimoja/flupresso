@@ -1,12 +1,22 @@
+import 'dart:developer';
+
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'ui/homepage.dart';
+import 'package:flutter/services.dart';
+import 'ui/Homepage.dart';
 import 'package:wakelock/wakelock.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Wakelock.enable();
+
+  try {
+    Wakelock.enable();
+  } on MissingPluginException catch (e) {
+    log("Failed to set wakelock: " + e.toString());
+  }
+
   setupServices();
+
   runApp(MyApp());
 }
 
