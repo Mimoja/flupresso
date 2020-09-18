@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/MachineService.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/machine_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as Theme;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class CoffeeSelection {

@@ -1,4 +1,4 @@
-import 'package:flupresso/model/Machine.dart';
+import 'package:flupresso/model/machine.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';

@@ -1,11 +1,11 @@
-import 'package:flupresso/model/Profile.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/ProfileService.dart';
+import 'package:flupresso/model/profile.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
-import 'package:flupresso/ui/screens/CoffeeScreen.dart';
-import 'package:flupresso/ui/screens/MiscScreen.dart';
+import 'package:flupresso/ui/screens/coffee_screen.dart';
+import 'package:flupresso/ui/screens/misc_screen.dart';
 import 'package:flutter/material.dart';
-import 'Theme.dart' as Theme;
+import 'theme.dart' as Theme;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);

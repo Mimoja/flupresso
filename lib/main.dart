@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'ui/Homepage.dart';
+import 'ui/homepage.dart';
 import 'package:wakelock/wakelock.dart';
 
 void main() {

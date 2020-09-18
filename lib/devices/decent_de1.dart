@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:flupresso/model/services/ble/MachineService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';

@@ -1,14 +1,14 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:flupresso/model/services/ble/MachineService.dart';
-import 'package:flupresso/model/services/ble/scaleService.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/ProfileService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flupresso/ui/screens/CoffeeSelection.dart';
-import 'package:flupresso/ui/screens/MachineSelection.dart';
+import 'package:flupresso/ui/screens/coffee_selection.dart';
+import 'package:flupresso/ui/screens/machine_selection.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as Theme;
 
 class CoffeeScreen extends StatefulWidget {
   @override

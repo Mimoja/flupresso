@@ -1,9 +1,9 @@
-import 'package:flupresso/model/services/ble/MachineService.dart';
-import 'package:flupresso/model/services/ble/scaleService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as Theme;
 
 class WaterScreen extends StatefulWidget {
   @override

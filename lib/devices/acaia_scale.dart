@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:math' show pow;
 import 'dart:typed_data';
 
-import 'package:flupresso/model/services/ble/scaleService.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';

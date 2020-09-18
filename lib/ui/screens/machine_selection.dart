@@ -1,6 +1,6 @@
-import 'package:flupresso/model/services/state/MachineService.dart';
+import 'package:flupresso/model/services/state/machine_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as Theme;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class MachineSelection {}
