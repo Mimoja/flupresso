@@ -12,7 +12,7 @@ void main() {
   try {
     Wakelock.enable();
   } on MissingPluginException catch (e) {
-    log("Failed to set wakelock: " + e.toString());
+    log('Failed to set wakelock: ' + e.toString());
   }
 
   runApp(MyApp());

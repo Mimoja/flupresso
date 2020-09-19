@@ -78,10 +78,10 @@ class ProfileService extends ChangeNotifier {
 }''';
 
   Profile currentProfile;
-  List<Profile> knownProfiles = List();
+  List<Profile> knownProfiles = [];
   SharedPreferences prefs;
 
-  CoffeeService() {
+  void CoffeeService() {
     Map userMap = jsonDecode(ProfileService.testInput);
     currentProfile = Profile.fromJson(userMap);
     init();
@@ -89,7 +89,7 @@ class ProfileService extends ChangeNotifier {
     log(user.toString());
   }
 
-  init() async {
+  void init() async {
     prefs = await SharedPreferences.getInstance();
     //TODO read profiles
   }

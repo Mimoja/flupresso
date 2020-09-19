@@ -44,24 +44,24 @@ class MachineState {
 enum EspressoMachineState { idle, espresso, water, steam }
 
 class EspressoMachineService extends ChangeNotifier {
-  MachineState _state = MachineState(null, EspressoMachineState.idle);
+  final MachineState _state = MachineState(null, EspressoMachineState.idle);
 
   EspressoMachineService();
 
   void setShot(ShotState shot) {
-    this._state.shot = shot;
+    _state.shot = shot;
     notifyListeners();
   }
 
   void setWaterLevel(WaterLevel water) {
-    this._state.water = water;
+    _state.water = water;
     notifyListeners();
   }
 
   void setState(EspressoMachineState state) {
-    this._state.coffeeState = state;
+    _state.coffeeState = state;
     notifyListeners();
   }
 
-  MachineState get state => this._state;
+  MachineState get state => _state;
 }

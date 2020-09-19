@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class Profile {
   final String name;
   final List<ProfileFrame> frames;
@@ -66,7 +64,7 @@ class ProfileTarget {
   factory ProfileTarget.fromJson(dynamic json) {
     return ProfileTarget(
       json['value'] as int,
-      _$enumDecode(_$ProfileType, json['type']) as ProfileType,
+      _$enumDecode(_$ProfileType, json['type']),
       json['interpolate'] as bool,
     );
   }
@@ -93,8 +91,7 @@ class ProfileTrigger {
     return ProfileTrigger(
       json['value'] as double,
       json['type'] as ProfileType,
-      _$enumDecode(_$ProfileTriggerType, json['operator'])
-          as ProfileTriggerType,
+      _$enumDecode(_$ProfileTriggerType, json['operator']),
     );
   }
 }
