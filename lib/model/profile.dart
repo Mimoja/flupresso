@@ -17,7 +17,7 @@ class Profile {
 class ProfileFrame {
   String name;
   int frameNumber;
-  int temperature;
+  double temperature;
   int duration;
   ProfileTarget target;
 
@@ -28,7 +28,7 @@ class ProfileFrame {
     return ProfileFrame(
       json['name'] as String,
       json['index'] as int,
-      json['temp'] as int,
+      json['temp'] as double,
       json['duration'] as int,
       ProfileTarget.fromJson(json['target']),
     );
@@ -55,7 +55,7 @@ T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
 }
 
 class ProfileTarget {
-  int value;
+  double value;
   ProfileType type;
   bool interpolate;
 
@@ -63,7 +63,7 @@ class ProfileTarget {
 
   factory ProfileTarget.fromJson(dynamic json) {
     return ProfileTarget(
-      json['value'] as int,
+      json['value'] as double,
       _$enumDecode(_$ProfileType, json['type']),
       json['interpolate'] as bool,
     );
