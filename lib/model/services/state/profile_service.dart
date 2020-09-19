@@ -81,7 +81,7 @@ class ProfileService extends ChangeNotifier {
   List<Profile> knownProfiles = [];
   SharedPreferences prefs;
 
-  void CoffeeService() {
+  ProfileService() {
     Map userMap = jsonDecode(ProfileService.testInput);
     currentProfile = Profile.fromJson(userMap);
     init();

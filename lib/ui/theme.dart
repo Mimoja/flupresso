@@ -10,12 +10,12 @@ class Colors {
 
   static const Color backgroundColor = Color(0xFF184059); //0xFFFF4580
   static const Color tabImageBorder = Color(0xFFFFFFFF); // 0xFFFFD2CF
-  static Color tabImageShadowColor =
+  static final Color tabImageShadowColor =
       HSLColor.fromColor(backgroundColor).withLightness(0.7).toColor();
-  static Color tabShadowColor =
+  static final Color tabShadowColor =
       HSLColor.fromColor(backgroundColor).withLightness(1).toColor();
 
-  static Color tabColor =
+  static final Color tabColor =
       HSVColor.fromColor(backgroundColor).withValue(_value - .05).toColor();
 
   static final _value = HSVColor.fromColor(backgroundColor).value;
@@ -24,7 +24,7 @@ class Colors {
   static final _bottom =
       HSVColor.fromColor(backgroundColor).withValue(_value - .1).toColor();
 
-  static var ScreenBackground = LinearGradient(
+  static final screenBackground = LinearGradient(
     colors: [
       _top,
       backgroundColor,

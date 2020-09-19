@@ -351,7 +351,7 @@ class _WaterScreenState extends State<WaterScreen> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: theme.Colors.ScreenBackground,
+          gradient: theme.Colors.screenBackground,
         ),
         child: ListView(
           children: <Widget>[

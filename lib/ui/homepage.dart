@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: theme.Colors.ScreenBackground,
+          gradient: theme.Colors.screenBackground,
         ),
         child: Column(
           children: <Widget>[

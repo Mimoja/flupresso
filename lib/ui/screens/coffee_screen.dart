@@ -292,7 +292,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.ScreenBackground,
+                gradient: theme.Colors.screenBackground,
               ),
               child: Column(
                 children: <Widget>[
@@ -305,13 +305,13 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             ),
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.ScreenBackground,
+                gradient: theme.Colors.screenBackground,
               ),
               child: CoffeeSelectionTab(),
             ),
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.ScreenBackground,
+                gradient: theme.Colors.screenBackground,
               ),
               child: MachineSelectionTab(),
             ),
