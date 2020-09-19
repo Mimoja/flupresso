@@ -30,8 +30,3 @@ jobs:
     - run: flutter test
     - run: flutter build apk --split-per-abi
     - run: flutter build ios --release --no-codesign
-    - name: Create Release APK
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "build/app/outputs/apk/debug/*.apk"
-        token: ${{ secrets.TOKEN }}
