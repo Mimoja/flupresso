@@ -20,9 +20,9 @@ class ScaleService {
   }
 
   void setWeight(double weight) {
-    log("Weight: " + weight.toString());
+    log('Weight: ' + weight.toString());
     var now = DateTime.now();
-    double flow = 0.0;
+    var flow = 0.0;
     if (last != null) {
       var timeDiff =
           (now.millisecondsSinceEpoch - last.millisecondsSinceEpoch) / 1000;

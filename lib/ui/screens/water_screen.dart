@@ -1,9 +1,9 @@
-import 'package:flupresso/model/services/ble/MachineService.dart';
-import 'package:flupresso/model/services/ble/scaleService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as theme;
 
 class WaterScreen extends StatefulWidget {
   @override
@@ -31,25 +31,25 @@ class _WaterScreenState extends State<WaterScreen> {
     scaleService = getIt<ScaleService>();
   }
 
-  List<ShotState> dataPoints = List();
+  List<ShotState> dataPoints = [];
 
   List<charts.Series<ShotState, double>> _createData() {
     return [
-      new charts.Series<ShotState, double>(
+      charts.Series<ShotState, double>(
         id: 'Pressure',
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupPressure,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(Theme.Colors.backgroundColor),
+            charts.ColorUtil.fromDartColor(theme.Colors.backgroundColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
-      new charts.Series<ShotState, double>(
+      charts.Series<ShotState, double>(
         id: 'Flow',
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupFlow,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(Theme.Colors.secondaryColor),
+            charts.ColorUtil.fromDartColor(theme.Colors.secondaryColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
@@ -60,14 +60,14 @@ class _WaterScreenState extends State<WaterScreen> {
     return ButtonBar(
       children: [
         Text(
-          "Water:",
-          style: Theme.TextStyles.tabPrimary,
+          'Water:',
+          style: theme.TextStyles.tabPrimary,
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "-5",
-            style: Theme.TextStyles.tabSecondary,
+            '-5',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -88,10 +88,10 @@ class _WaterScreenState extends State<WaterScreen> {
           },
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "+5",
-            style: Theme.TextStyles.tabSecondary,
+            '+5',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -109,14 +109,14 @@ class _WaterScreenState extends State<WaterScreen> {
     return ButtonBar(
       children: [
         Text(
-          "Steam Timeout: ",
-          style: Theme.TextStyles.tabPrimary,
+          'Steam Timeout: ',
+          style: theme.TextStyles.tabPrimary,
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "-1",
-            style: Theme.TextStyles.tabSecondary,
+            '-1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -137,10 +137,10 @@ class _WaterScreenState extends State<WaterScreen> {
           },
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "+1",
-            style: Theme.TextStyles.tabSecondary,
+            '+1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -158,14 +158,14 @@ class _WaterScreenState extends State<WaterScreen> {
     return ButtonBar(
       children: [
         Text(
-          "Water Temperature: ",
-          style: Theme.TextStyles.tabPrimary,
+          'Water Temperature: ',
+          style: theme.TextStyles.tabPrimary,
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "-1",
-            style: Theme.TextStyles.tabSecondary,
+            '-1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -186,10 +186,10 @@ class _WaterScreenState extends State<WaterScreen> {
           },
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "+1",
-            style: Theme.TextStyles.tabSecondary,
+            '+1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -207,14 +207,14 @@ class _WaterScreenState extends State<WaterScreen> {
     return ButtonBar(
       children: [
         Text(
-          "Flush Timeout: ",
-          style: Theme.TextStyles.tabPrimary,
+          'Flush Timeout: ',
+          style: theme.TextStyles.tabPrimary,
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "-1",
-            style: Theme.TextStyles.tabSecondary,
+            '-1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -235,10 +235,10 @@ class _WaterScreenState extends State<WaterScreen> {
           },
         ),
         RaisedButton(
-          color: Theme.Colors.goodColor,
+          color: theme.Colors.goodColor,
           child: Text(
-            "+1",
-            style: Theme.TextStyles.tabSecondary,
+            '+1',
+            style: theme.TextStyles.tabSecondary,
           ),
           onPressed: () {
             setState(() {
@@ -257,10 +257,10 @@ class _WaterScreenState extends State<WaterScreen> {
       height: 150,
       margin: const EdgeInsets.only(left: 10.0),
       width: MediaQuery.of(context).size.width * 0.75,
-      decoration: new BoxDecoration(
-        color: Theme.Colors.tabColor,
+      decoration: BoxDecoration(
+        color: theme.Colors.tabColor,
         shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: charts.LineChart(
         _createData(),
@@ -293,45 +293,45 @@ class _WaterScreenState extends State<WaterScreen> {
           flex: 5,
         ),
         RaisedButton(
-          textColor: Theme.Colors.primaryColor,
-          color: Theme.Colors.goodColor,
+          textColor: theme.Colors.primaryColor,
+          color: theme.Colors.goodColor,
           onPressed: () => setState(() => {}),
           child: Text(
-            "Water",
-            style: Theme.TextStyles.tabTertiary,
+            'Water',
+            style: theme.TextStyles.tabTertiary,
           ),
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
         ),
         Spacer(
           flex: 1,
         ),
         RaisedButton(
-          textColor: Theme.Colors.primaryColor,
-          color: Theme.Colors.goodColor,
+          textColor: theme.Colors.primaryColor,
+          color: theme.Colors.goodColor,
           onPressed: () => setState(() => {}),
           child: Text(
-            "Steam",
-            style: Theme.TextStyles.tabTertiary,
+            'Steam',
+            style: theme.TextStyles.tabTertiary,
           ),
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
         ),
         Spacer(
           flex: 1,
         ),
         RaisedButton(
-          textColor: Theme.Colors.primaryColor,
-          color: Theme.Colors.goodColor,
+          textColor: theme.Colors.primaryColor,
+          color: theme.Colors.goodColor,
           onPressed: () => setState(() => {}),
           child: Text(
-            "Flush",
-            style: Theme.TextStyles.tabTertiary,
+            'Flush',
+            style: theme.TextStyles.tabTertiary,
           ),
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
         ),
         Spacer(
@@ -345,27 +345,27 @@ class _WaterScreenState extends State<WaterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.Colors.backgroundColor,
+        backgroundColor: theme.Colors.backgroundColor,
         title:
-            Text("Water / Steam / Flush", style: Theme.TextStyles.tabSecondary),
+            Text('Water / Steam / Flush', style: theme.TextStyles.tabSecondary),
       ),
       body: Container(
-        decoration: new BoxDecoration(
-          gradient: Theme.Colors.ScreenBackground,
+        decoration: BoxDecoration(
+          gradient: theme.Colors.screenBackground,
         ),
         child: ListView(
           children: <Widget>[
             _buildGraph(),
-            Theme.Helper.horizontalBorder(),
+            theme.Helper.horizontalBorder(),
             Center(
               child: _buildControls(),
             ),
-            Theme.Helper.horizontalBorder(),
+            theme.Helper.horizontalBorder(),
             _buildTemperaturControl(),
             _buildWaterControl(),
-            Theme.Helper.horizontalBorder(),
+            theme.Helper.horizontalBorder(),
             _buildFlushControl(),
-            Theme.Helper.horizontalBorder(),
+            theme.Helper.horizontalBorder(),
             _buildSteamConrol(),
             Container(
               height: 40,

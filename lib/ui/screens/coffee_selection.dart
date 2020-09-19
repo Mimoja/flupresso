@@ -1,18 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/MachineService.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/machine_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as theme;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class CoffeeSelection {
-  @override
   Widget getTabContent() {
     return CoffeeSelectionTab();
   }
 
-  @override
   Widget getImage() {
     return CoffeeSelectionImage();
   }
@@ -27,7 +25,7 @@ class CoffeeSelectionImage extends StatelessWidget {
             'https://images.squarespace-cdn.com/content/5d318463e8d6c50001d160a6/1563541579731-9HESYR1NGT92L2CWRJ3X/elemenza_Logo_BoA.png?format=1500w&content-type=image%2Fpng',
         width: 65,
         height: 65,
-        color: Theme.Colors.primaryColor,
+        color: theme.Colors.primaryColor,
         fit: BoxFit.scaleDown,
       ),
     );
@@ -35,6 +33,7 @@ class CoffeeSelectionImage extends StatelessWidget {
 }
 
 class CoffeeSelectionTab extends StatefulWidget {
+  @override
   _CoffeeSelectionTabState createState() => _CoffeeSelectionTabState();
 }
 
@@ -45,7 +44,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
       TextEditingController();
 
   String _selectedRoaster;
-  String _selectedCoffee;
+  //String _selectedCoffee;
 
   CoffeeService coffeeService;
   MachineService machineService;
@@ -68,7 +67,7 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
             textFieldConfiguration: TextFieldConfiguration(
               decoration: InputDecoration(
                 labelText: 'Roaster',
-                labelStyle: Theme.TextStyles.tabLabel,
+                labelStyle: theme.TextStyles.tabLabel,
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -76,8 +75,8 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
               ),
-              style: Theme.TextStyles.tabPrimary,
-              controller: this._typeAheadRoasterController,
+              style: theme.TextStyles.tabPrimary,
+              controller: _typeAheadRoasterController,
             ),
             suggestionsCallback: (pattern) async {
               return coffeeService.getRoasterSuggestions(pattern);
@@ -91,20 +90,21 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
               return suggestionsBox;
             },
             onSuggestionSelected: (suggestion) {
-              this._typeAheadRoasterController.text = suggestion;
+              _typeAheadRoasterController.text = suggestion;
             },
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please select a roaster';
               }
+              return null;
             },
-            onSaved: (value) => this._selectedRoaster = value,
+            onSaved: (value) => _selectedRoaster = value,
           ),
           TypeAheadFormField(
             textFieldConfiguration: TextFieldConfiguration(
                 decoration: InputDecoration(
                   labelText: 'Coffee',
-                  labelStyle: Theme.TextStyles.tabLabel,
+                  labelStyle: theme.TextStyles.tabLabel,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -112,8 +112,8 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
                 ),
-                controller: this._typeAheadCoffeeController,
-                style: Theme.TextStyles.tabSecondary),
+                controller: _typeAheadCoffeeController,
+                style: theme.TextStyles.tabSecondary),
             suggestionsCallback: (pattern) async {
               return coffeeService.getCoffeeSuggestions(
                   pattern, _selectedRoaster);
@@ -127,29 +127,30 @@ class _CoffeeSelectionTabState extends State<CoffeeSelectionTab> {
               return suggestionsBox;
             },
             onSuggestionSelected: (suggestion) {
-              this._typeAheadCoffeeController.text = suggestion;
+              _typeAheadCoffeeController.text = suggestion;
             },
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please select a coffee';
               }
+              return null;
             },
-            onSaved: (value) => this._selectedCoffee = value,
+            //onSaved: (value) => this._selectedCoffee = value,
           ),
-          new Container(
-              color: Theme.Colors.backgroundColor,
+          Container(
+              color: theme.Colors.backgroundColor,
               width: 24.0,
               height: 1.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0)),
-          new Row(
+          Row(
             children: <Widget>[
-              new Icon(Icons.location_on,
-                  size: 14.0, color: Theme.Colors.goodColor),
-              new Text("Dummy Origin", style: Theme.TextStyles.tabTertiary),
-              new Container(width: 24.0),
-              new Icon(Icons.flight_land,
-                  size: 14.0, color: Theme.Colors.goodColor),
-              new Text("10€", style: Theme.TextStyles.tabTertiary),
+              Icon(Icons.location_on,
+                  size: 14.0, color: theme.Colors.goodColor),
+              Text('Dummy Origin', style: theme.TextStyles.tabTertiary),
+              Container(width: 24.0),
+              Icon(Icons.flight_land,
+                  size: 14.0, color: theme.Colors.goodColor),
+              Text('10€', style: theme.TextStyles.tabTertiary),
             ],
           ),
         ],

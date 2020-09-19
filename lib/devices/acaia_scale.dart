@@ -3,18 +3,18 @@ import 'dart:developer';
 import 'dart:math' show pow;
 import 'dart:typed_data';
 
-import 'package:flupresso/model/services/ble/scaleService.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
 class AcaiaScale extends ChangeNotifier {
-  static const String ServiceUUID = "00001820-0000-1000-8000-00805f9b34fb";
+  static const String ServiceUUID = '00001820-0000-1000-8000-00805f9b34fb';
   static const String CharateristicUUID =
-      "00002a80-0000-1000-8000-00805f9b34fb";
+      '00002a80-0000-1000-8000-00805f9b34fb';
   ScaleService scaleService;
 
-  static const _heartbeat_time = const Duration(seconds: 3);
+  static const _heartbeat_time = Duration(seconds: 3);
   static const List<int> _heartbeatPayload = [0x02, 0x00];
   static const List<int> _identPayload = [
     0x30,
@@ -52,7 +52,7 @@ class AcaiaScale extends ChangeNotifier {
 
   PeripheralConnectionState _state;
 
-  List<int> commandBuffer = List();
+  List<int> commandBuffer = [];
   Timer _heartBeatTimer;
 
   AcaiaScale(this.device) {
@@ -62,16 +62,16 @@ class AcaiaScale extends ChangeNotifier {
         .observeConnectionState(
             emitCurrentValue: false, completeOnDisconnect: true)
         .listen((connectionState) {
-      log("Peripheral ${device.identifier} connection state is $connectionState");
+      log('Peripheral ${device.identifier} connection state is $connectionState');
       _onStateChange(connectionState);
     });
     device.connect();
   }
 
   Uint8List encode(int msgType, List<int> payload) {
-    int cksum1 = 0;
-    int cksum2 = 0;
-    List<int> buffer = List();
+    var cksum1 = 0;
+    var cksum2 = 0;
+    var buffer = <int>[];
     buffer.add(HEADER1);
     buffer.add(HEADER2);
     buffer.add(msgType);
@@ -90,15 +90,15 @@ class AcaiaScale extends ChangeNotifier {
   void parsePayload(int type, List<int> payload) {
     switch (type) {
       case 12:
-        int subType = payload[0];
+        var subType = payload[0];
         if (subType == 5) {
-          int temp = ((payload[4] & 0xff) << 24) +
+          var temp = ((payload[4] & 0xff) << 24) +
               ((payload[3] & 0xff) << 16) +
               ((payload[2] & 0xff) << 8) +
               (payload[1] & 0xff);
-          int unit = payload[5] & 0xFF;
+          var unit = payload[5] & 0xFF;
 
-          double value = temp / pow(10, unit);
+          var value = temp / pow(10, unit);
           if ((payload[6] & 0x02) != 0) {
             value *= -1.0;
           }
@@ -112,11 +112,11 @@ class AcaiaScale extends ChangeNotifier {
         break;
       // General Status including battery
       case 8:
-        int batteryLevel = commandBuffer[4];
+        var batteryLevel = commandBuffer[4];
         log('Got status message, battery= ' + batteryLevel.toString());
         break;
       default:
-        log("Unparsed acaia response: " + type.toString());
+        log('Unparsed acaia response: ' + type.toString());
     }
   }
 
@@ -131,43 +131,43 @@ class AcaiaScale extends ChangeNotifier {
       return;
     }
     if (commandBuffer.length > 4) {
-      int type = commandBuffer[2];
+      var type = commandBuffer[2];
       parsePayload(type, commandBuffer.sublist(4));
       commandBuffer.clear();
     }
   }
 
-  _sendHeatbeat() {
+  void _sendHeatbeat() {
     if (_state != PeripheralConnectionState.connected) {
-      log("Disconnected from acaia scale. Not sending heartbeat");
+      log('Disconnected from acaia scale. Not sending heartbeat');
       return;
     }
     device.writeCharacteristic(
         ServiceUUID, CharateristicUUID, encode(0x00, _heartbeatPayload), false);
   }
 
-  _sendIdent() {
+  void _sendIdent() {
     if (_state != PeripheralConnectionState.connected) {
-      log("Disconnected from acaia scale. Not sending ident");
+      log('Disconnected from acaia scale. Not sending ident');
       return;
     }
     device.writeCharacteristic(
         ServiceUUID, CharateristicUUID, encode(0x0b, _identPayload), false);
-    log("Ident payload: " + encode(0x0b, _identPayload).toString());
+    log('Ident payload: ' + encode(0x0b, _identPayload).toString());
   }
 
-  _sendConfig() {
+  void _sendConfig() {
     if (_state != PeripheralConnectionState.connected) {
-      log("Disconnected from acaia scale. Not sending config");
+      log('Disconnected from acaia scale. Not sending config');
       return;
     }
     device.writeCharacteristic(
         ServiceUUID, CharateristicUUID, encode(0x0c, _configPayload), false);
-    log("Config payload: " + encode(0x0c, _configPayload).toString());
+    log('Config payload: ' + encode(0x0c, _configPayload).toString());
   }
 
-  _onStateChange(PeripheralConnectionState state) async {
-    log("State changed to " + state.toString());
+  void _onStateChange(PeripheralConnectionState state) async {
+    log('State changed to ' + state.toString());
     _state = state;
 
     switch (state) {
@@ -178,15 +178,14 @@ class AcaiaScale extends ChangeNotifier {
             .monitorCharacteristic(ServiceUUID, CharateristicUUID)
             .listen(_notificationCallback);
 
-        new Timer(Duration(seconds: 1), _sendIdent);
-        new Timer(Duration(seconds: 2), _sendConfig);
+        Timer(Duration(seconds: 1), _sendIdent);
+        Timer(Duration(seconds: 2), _sendConfig);
 
-        _heartBeatTimer =
-            new Timer.periodic(_heartbeat_time, (Timer t) => _sendHeatbeat());
+        _heartBeatTimer = Timer.periodic(_heartbeat_time, (Timer t) => _sendHeatbeat());
         return;
       case PeripheralConnectionState.disconnected:
-        log("Acaia Scale disconnected. Destroying");
-        device.disconnectOrCancelConnection();
+        log('Acaia Scale disconnected. Destroying');
+        await device.disconnectOrCancelConnection();
         _heartBeatTimer?.cancel();
         notifyListeners();
         return;

@@ -8,23 +8,23 @@ class Colors {
   static const Color goodColor = Color(0xFF32C2F0);
   static const Color badColor = Color(0xFFF28030);
 
-  static const Color backgroundColor = const Color(0xFF184059); //0xFFFF4580
-  static const Color tabImageBorder = const Color(0xFFFFFFFF); // 0xFFFFD2CF
-  static Color tabImageShadowColor =
+  static const Color backgroundColor = Color(0xFF184059); //0xFFFF4580
+  static const Color tabImageBorder = Color(0xFFFFFFFF); // 0xFFFFD2CF
+  static final Color tabImageShadowColor =
       HSLColor.fromColor(backgroundColor).withLightness(0.7).toColor();
-  static Color tabShadowColor =
+  static final Color tabShadowColor =
       HSLColor.fromColor(backgroundColor).withLightness(1).toColor();
 
-  static Color tabColor =
+  static final Color tabColor =
       HSVColor.fromColor(backgroundColor).withValue(_value - .05).toColor();
 
-  static var _value = HSVColor.fromColor(backgroundColor).value;
-  static var _top =
+  static final _value = HSVColor.fromColor(backgroundColor).value;
+  static final _top =
       HSVColor.fromColor(backgroundColor).withValue(_value - .05).toColor();
-  static var _bottom =
+  static final _bottom =
       HSVColor.fromColor(backgroundColor).withValue(_value - .1).toColor();
 
-  static var ScreenBackground = LinearGradient(
+  static final screenBackground = LinearGradient(
     colors: [
       _top,
       backgroundColor,
@@ -51,25 +51,25 @@ class Dimens {
 class TextStyles {
   const TextStyles();
 
-  static const TextStyle tabPrimary = const TextStyle(
+  static const TextStyle tabPrimary = TextStyle(
       color: Colors.primaryColor,
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,
       fontSize: 28.0);
 
-  static const TextStyle tabSecondary = const TextStyle(
+  static const TextStyle tabSecondary = TextStyle(
       color: Colors.primaryColor,
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,
       fontSize: 20.0);
 
-  static const TextStyle tabTertiary = const TextStyle(
+  static const TextStyle tabTertiary = TextStyle(
       color: Colors.primaryColor,
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,
       fontSize: 16.0);
 
-  static const TextStyle tabLabel = const TextStyle(
+  static const TextStyle tabLabel = TextStyle(
       color: Colors.primaryColor,
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w300,

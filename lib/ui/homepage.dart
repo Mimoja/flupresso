@@ -1,11 +1,10 @@
-import 'package:flupresso/model/Profile.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/ProfileService.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
-import 'package:flupresso/ui/screens/CoffeeScreen.dart';
-import 'package:flupresso/ui/screens/MiscScreen.dart';
+import 'package:flupresso/ui/screens/coffee_screen.dart';
+import 'package:flupresso/ui/screens/water_screen.dart';
 import 'package:flutter/material.dart';
-import 'Theme.dart' as Theme;
+import 'theme.dart' as theme;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -36,20 +35,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildButton(child, onpress) {
-    var color = Theme.Colors.backgroundColor;
-    return FlatButton(
-      onPressed: onpress,
-      color: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(19.0),
-        side: BorderSide(color: color),
-      ),
-      child: Container(
-        height: 50,
+    var color = theme.Colors.backgroundColor;
+    return Container(
         padding: EdgeInsets.all(10.0),
-        child: child,
-      ),
-    );
+        child: FlatButton(
+          onPressed: onpress,
+          color: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(19.0),
+            side: BorderSide(color: color),
+          ),
+          child: Container(
+            height: 50,
+            padding: EdgeInsets.all(10.0),
+            child: child,
+          ),
+        ));
   }
 
   @override
@@ -63,14 +64,14 @@ class _HomePageState extends State<HomePage> {
         ),
         Text(
           currentCoffee.roaster,
-          style: Theme.TextStyles.tabSecondary,
+          style: theme.TextStyles.tabSecondary,
         ),
         Spacer(
           flex: 1,
         ),
         Text(
           currentCoffee.name,
-          style: Theme.TextStyles.tabSecondary,
+          style: theme.TextStyles.tabSecondary,
         ),
         Spacer(
           flex: 2,
@@ -78,28 +79,28 @@ class _HomePageState extends State<HomePage> {
       ]);
     } else {
       coffee = Text(
-        "No Coffee selected",
-        style: Theme.TextStyles.tabSecondary,
+        'No Coffee selected',
+        style: theme.TextStyles.tabSecondary,
       );
     }
     Widget profile;
-    Profile currentProfile = profileService.currentProfile;
+    var currentProfile = profileService.currentProfile;
     if (currentProfile != null) {
       profile = Text(
         currentProfile.name,
-        style: Theme.TextStyles.tabSecondary,
+        style: theme.TextStyles.tabSecondary,
       );
     } else {
       profile = Text(
-        "No Profile selected",
-        style: Theme.TextStyles.tabSecondary,
+        'No Profile selected',
+        style: theme.TextStyles.tabSecondary,
       );
     }
 
     return Scaffold(
       body: Container(
-        decoration: new BoxDecoration(
-          gradient: Theme.Colors.ScreenBackground,
+        decoration: BoxDecoration(
+          gradient: theme.Colors.screenBackground,
         ),
         child: Column(
           children: <Widget>[
@@ -110,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                 child: Image(
               image: AssetImage('assets/decent.png'),
               height: 120,
-              color: Theme.Colors.primaryColor,
+              color: theme.Colors.primaryColor,
             )),
             Spacer(
               flex: 3,
@@ -121,13 +122,15 @@ class _HomePageState extends State<HomePage> {
               flex: 3,
             ),
             Center(
-              child: Row(
+              child: Wrap(
+                runAlignment: WrapAlignment.spaceEvenly,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.center,
                 children: [
-                  Spacer(),
                   _buildButton(
                     Text(
-                      "Espresso",
-                      style: Theme.TextStyles.tabSecondary,
+                      'Espresso',
+                      style: theme.TextStyles.tabSecondary,
                     ),
                     () => Navigator.push(
                         context,
@@ -135,11 +138,10 @@ class _HomePageState extends State<HomePage> {
                           builder: ((context) => CoffeeScreen()),
                         )),
                   ),
-                  Spacer(),
                   _buildButton(
                     Text(
-                      "Water / Steam / Flush",
-                      style: Theme.TextStyles.tabSecondary,
+                      'Water / Steam / Flush',
+                      style: theme.TextStyles.tabSecondary,
                     ),
                     () => Navigator.push(
                       context,
@@ -148,14 +150,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Spacer(),
                   _buildButton(
                       Text(
-                        "Settings",
-                        style: Theme.TextStyles.tabSecondary,
+                        'Settings',
+                        style: theme.TextStyles.tabSecondary,
                       ),
                       () => {}),
-                  Spacer(),
                 ],
               ),
             ),
