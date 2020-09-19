@@ -3,7 +3,7 @@ import 'package:flupresso/model/services/state/coffee_service.dart';
 import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flupresso/ui/screens/coffee_screen.dart';
-import 'package:flupresso/ui/screens/misc_screen.dart';
+import 'package:flupresso/ui/screens/water_screen.dart';
 import 'package:flutter/material.dart';
 import 'theme.dart' as Theme;
 
@@ -37,23 +37,27 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildButton(child, onpress) {
     var color = Theme.Colors.backgroundColor;
-    return FlatButton(
-      onPressed: onpress,
-      color: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(19.0),
-        side: BorderSide(color: color),
-      ),
-      child: Container(
-        height: 50,
+    return Container(
         padding: EdgeInsets.all(10.0),
-        child: child,
-      ),
-    );
+        child: FlatButton(
+          onPressed: onpress,
+          color: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(19.0),
+            side: BorderSide(color: color),
+          ),
+          child: Container(
+            height: 50,
+            padding: EdgeInsets.all(10.0),
+            child: child,
+          ),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
+
     Widget coffee;
     var currentCoffee = coffeeSelection.currentCoffee;
     if (currentCoffee != null) {
@@ -121,9 +125,11 @@ class _HomePageState extends State<HomePage> {
               flex: 3,
             ),
             Center(
-              child: Row(
+              child: Wrap(
+                runAlignment: WrapAlignment.spaceEvenly,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.center,
                 children: [
-                  Spacer(),
                   _buildButton(
                     Text(
                       "Espresso",
@@ -135,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                           builder: ((context) => CoffeeScreen()),
                         )),
                   ),
-                  Spacer(),
                   _buildButton(
                     Text(
                       "Water / Steam / Flush",
@@ -148,14 +153,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Spacer(),
                   _buildButton(
                       Text(
                         "Settings",
                         style: Theme.TextStyles.tabSecondary,
                       ),
                       () => {}),
-                  Spacer(),
                 ],
               ),
             ),

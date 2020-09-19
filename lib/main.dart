@@ -15,12 +15,14 @@ void main() {
     log("Failed to set wakelock: " + e.toString());
   }
 
-  setupServices();
-
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp(){
+    setupServices();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
