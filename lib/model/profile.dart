@@ -63,7 +63,7 @@ class ProfileTarget {
 
   factory ProfileTarget.fromJson(dynamic json) {
     return ProfileTarget(
-      double.parse(json['value'].toString()),
+      json['value'].toDouble(),
       _$enumDecode(_$ProfileType, json['type']),
       json['interpolate'] as bool,
     );
