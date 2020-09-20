@@ -3,7 +3,6 @@ import 'package:flupresso/model/services/ble/scale_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/theme.dart' as theme;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';

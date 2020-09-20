@@ -8,7 +8,6 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flupresso/ui/screens/coffee_selection.dart';
 import 'package:flupresso/ui/screens/machine_selection.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/theme.dart' as theme;
 import 'package:provider/provider.dart';
 
 import '../theme.dart';

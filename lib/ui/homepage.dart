@@ -6,7 +6,6 @@ import 'package:flupresso/ui/screens/water_screen.dart';
 import 'package:flupresso/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'theme.dart' as theme;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);

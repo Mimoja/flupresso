@@ -1,6 +1,5 @@
 import 'package:flupresso/model/services/state/machine_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/theme.dart' as theme;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 
