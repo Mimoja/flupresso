@@ -28,8 +28,8 @@ class ProfileFrame {
     return ProfileFrame(
       json['name'] as String,
       json['index'] as int,
-      double.parse(json['temp'].toString()),
-      double.parse(json['duration'].toString()),
+      json['temp'].toDouble(),
+      json['duration'].toDouble(),
       ProfileTarget.fromJson(json['target']),
     );
   }
@@ -89,7 +89,7 @@ class ProfileTrigger {
 
   factory ProfileTrigger.fromJson(dynamic json) {
     return ProfileTrigger(
-      double.parse(json['value'].toString()),
+      json['value'].toDouble(),
       json['type'] as ProfileType,
       _$enumDecode(_$ProfileTriggerType, json['operator']),
     );
