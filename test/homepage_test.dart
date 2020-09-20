@@ -1,11 +1,16 @@
+import 'package:flupresso/ui/theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flupresso/main.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('Main navigation works', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    // TODO: move multiprovider constructor to utils
+    await tester.pumpWidget(MultiProvider(providers: [
+      ChangeNotifierProvider<FluTheme>(create: (_) => FluTheme()),
+    ], child: MyApp()));
 
     // Verify that our counter starts at 0.
     expect(find.text('Espresso'), findsOneWidget);
