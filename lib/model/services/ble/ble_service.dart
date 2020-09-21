@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 import 'package:flupresso/devices/acaia_scale.dart';
 import 'package:flupresso/devices/decent_de1.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,8 @@ import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 class BLEService extends ChangeNotifier {
   static BleManager bleManager = BleManager();
 
-  List<Peripheral> _devicesList = new List<Peripheral>();
-  PermissionStatus _locationPermissionStatus;
+  final List<Peripheral> _devicesList = <Peripheral>[];
+  //PermissionStatus _locationPermissionStatus;
 
   BLEService() {
     init();
@@ -30,7 +29,7 @@ class BLEService extends ChangeNotifier {
   }
 
   void deviceScanListener(ScanResult result) {
-    print("Scanned Peripheral ${result.peripheral.name}, RSSI ${result.rssi}");
+    print('Scanned Peripheral ${result.peripheral.name}, RSSI ${result.rssi}');
     _addDeviceTolist(result.peripheral);
   }
 
@@ -46,22 +45,22 @@ class BLEService extends ChangeNotifier {
 
   void _checkdevice(Peripheral device) async {
     if (!await device.isConnected()) {
-      log("Removing device");
+      log('Removing device');
       _devicesList.remove(device);
       bleManager.startPeripheralScan().listen(deviceScanListener);
     }
   }
 
-  _addDeviceTolist(final Peripheral device) async {
+  void _addDeviceTolist(final Peripheral device) async {
     if (!_devicesList.map((e) => e.identifier).contains(device.identifier)) {
       if (!await device.isConnected() &&
           device.name != null &&
-          device.name.startsWith("ACAIA")) {
-        log("Creating Acaia Scale!");
+          device.name.startsWith('ACAIA')) {
+        log('Creating Acaia Scale!');
         AcaiaScale(device).addListener(() => _checkdevice(device));
       }
-      if (device.name != null && device.name.startsWith("DE1")) {
-        log("Creating DE1 machine!");
+      if (device.name != null && device.name.startsWith('DE1')) {
+        log('Creating DE1 machine!');
         DE1(device).addListener(() => _checkdevice(device));
       }
       _devicesList.add(device);
@@ -69,6 +68,7 @@ class BLEService extends ChangeNotifier {
     }
   }
 
+  /*
   Future<void> _checkPermissions() async {
     if (Platform.isAndroid) {
       var permissionStatus = await PermissionHandler()
@@ -77,8 +77,9 @@ class BLEService extends ChangeNotifier {
       _locationPermissionStatus = permissionStatus[PermissionGroup.location];
 
       if (_locationPermissionStatus != PermissionStatus.granted) {
-        return Future.error(Exception("Location permission not granted"));
+        return Future.error(Exception('Location permission not granted'));
       }
     }
   }
+  */
 }

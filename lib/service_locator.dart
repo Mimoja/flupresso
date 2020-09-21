@@ -1,13 +1,13 @@
-import 'package:flupresso/model/services/ble/bluetoothService.dart';
-import 'package:flupresso/model/services/ble/scaleService.dart';
-import 'package:flupresso/model/services/ble/MachineService.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/MachineService.dart';
-import 'package:flupresso/model/services/state/ProfileService.dart';
+import 'package:flupresso/model/services/ble/ble_service.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/machine_service.dart';
+import 'package:flupresso/model/services/state/profile_service.dart';
 
 import 'package:get_it/get_it.dart';
 
-GetIt getIt = GetIt.instance;
+final getIt = GetIt.instance;
 
 void setupServices() {
   getIt.registerSingleton<BLEService>(BLEService(), signalsReady: false);

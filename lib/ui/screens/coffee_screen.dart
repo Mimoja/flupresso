@@ -1,14 +1,14 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:flupresso/model/services/ble/MachineService.dart';
-import 'package:flupresso/model/services/ble/scaleService.dart';
-import 'package:flupresso/model/services/state/CoffeeService.dart';
-import 'package:flupresso/model/services/state/ProfileService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
+import 'package:flupresso/model/services/ble/scale_service.dart';
+import 'package:flupresso/model/services/state/coffee_service.dart';
+import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flupresso/ui/screens/CoffeeSelection.dart';
-import 'package:flupresso/ui/screens/MachineSelection.dart';
+import 'package:flupresso/ui/screens/coffee_selection.dart';
+import 'package:flupresso/ui/screens/machine_selection.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/Theme.dart' as Theme;
+import 'package:flupresso/ui/theme.dart' as theme;
 
 class CoffeeScreen extends StatefulWidget {
   @override
@@ -41,8 +41,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
     scaleService = getIt<ScaleService>();
   }
 
-  updateCoffee() => setState(() {
-        ShotState shot = machineService.state.shot;
+  void updateCoffee() => setState(() {
+        var shot = machineService.state.shot;
         if (machineService.state.coffeeState == EspressoMachineState.idle) {
           inShot = false;
           return;
@@ -58,26 +58,26 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
       });
 
   bool inShot = false;
-  List<ShotState> dataPoints = List();
+  List<ShotState> dataPoints = [];
   double baseTime;
 
   List<charts.Series<ShotState, double>> _createData() {
     return [
-      new charts.Series<ShotState, double>(
+      charts.Series<ShotState, double>(
         id: 'Pressure',
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupPressure,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(Theme.Colors.backgroundColor),
+            charts.ColorUtil.fromDartColor(theme.Colors.backgroundColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
-      new charts.Series<ShotState, double>(
+      charts.Series<ShotState, double>(
         id: 'Flow',
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupFlow,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(Theme.Colors.secondaryColor),
+            charts.ColorUtil.fromDartColor(theme.Colors.secondaryColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
@@ -89,10 +89,10 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
       height: 300,
       margin: const EdgeInsets.only(left: 10.0),
       width: MediaQuery.of(context).size.width - 105,
-      decoration: new BoxDecoration(
-        color: Theme.Colors.tabColor,
+      decoration: BoxDecoration(
+        color: theme.Colors.tabColor,
         shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: charts.LineChart(
         _createData(),
@@ -100,8 +100,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
         behaviors: [
           // Define one domain and two measure annotations configured to render
           // labels in the chart margins.
-          new charts.RangeAnnotation([
-            new charts.RangeAnnotationSegment(
+          charts.RangeAnnotation([
+            charts.RangeAnnotationSegment(
                 9.5, 12, charts.RangeAnnotationAxisType.measure,
                 labelAnchor: charts.AnnotationLabelAnchor.end,
                 color: const charts.Color(r: 0xff, g: 0, b: 0, a: 0x30),
@@ -113,11 +113,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             labelStyle: charts.TextStyleSpec(
                 fontSize: 10,
                 color:
-                    charts.ColorUtil.fromDartColor(Theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
             lineStyle: charts.LineStyleSpec(
                 thickness: 0,
                 color:
-                    charts.ColorUtil.fromDartColor(Theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
           ),
         ),
         domainAxis: charts.NumericAxisSpec(
@@ -125,11 +125,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             labelStyle: charts.TextStyleSpec(
                 fontSize: 10,
                 color:
-                    charts.ColorUtil.fromDartColor(Theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
             lineStyle: charts.LineStyleSpec(
                 thickness: 0,
                 color:
-                    charts.ColorUtil.fromDartColor(Theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
           ),
         ),
       ),
@@ -143,58 +143,58 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
         children: [
           Row(
             children: [
-              Text("State: ", style: Theme.TextStyles.tabSecondary),
+              Text('State: ', style: theme.TextStyles.tabSecondary),
               Text(
                   machineService.state.coffeeState
                       .toString()
                       .substring(12)
                       .toUpperCase(),
-                  style: Theme.TextStyles.tabPrimary),
+                  style: theme.TextStyles.tabPrimary),
             ],
           ),
           Row(
             children: [
-              Text("Pressure: ", style: Theme.TextStyles.tabSecondary),
+              Text('Pressure: ', style: theme.TextStyles.tabSecondary),
               Text(
                   machineService.state.shot.groupPressure.toStringAsFixed(1) +
-                      " bar",
-                  style: Theme.TextStyles.tabPrimary),
+                      ' bar',
+                  style: theme.TextStyles.tabPrimary),
             ],
           ),
           Row(
             children: [
-              Text("Flow: ", style: Theme.TextStyles.tabSecondary),
+              Text('Flow: ', style: theme.TextStyles.tabSecondary),
               Text(
                   machineService.state.shot.groupFlow.toStringAsFixed(2) +
-                      " ml/s",
-                  style: Theme.TextStyles.tabPrimary),
+                      ' ml/s',
+                  style: theme.TextStyles.tabPrimary),
             ],
           ),
           Row(
             children: [
-              Text("Mix Temp: ", style: Theme.TextStyles.tabSecondary),
-              Text(machineService.state.shot.mixTemp.toStringAsFixed(2) + " °C",
-                  style: Theme.TextStyles.tabPrimary),
+              Text('Mix Temp: ', style: theme.TextStyles.tabSecondary),
+              Text(machineService.state.shot.mixTemp.toStringAsFixed(2) + ' °C',
+                  style: theme.TextStyles.tabPrimary),
             ],
           ),
           Row(
             children: [
-              Text("Head Temp: ", style: Theme.TextStyles.tabSecondary),
+              Text('Head Temp: ', style: theme.TextStyles.tabSecondary),
               Text(
-                  machineService.state.shot.headTemp.toStringAsFixed(2) + " °C",
-                  style: Theme.TextStyles.tabPrimary),
+                  machineService.state.shot.headTemp.toStringAsFixed(2) + ' °C',
+                  style: theme.TextStyles.tabPrimary),
             ],
           ),
         ],
       );
     } else {
       insights =
-          Text("Machine is not connected", style: Theme.TextStyles.tabPrimary);
+          Text('Machine is not connected', style: theme.TextStyles.tabPrimary);
     }
     return insights;
   }
 
-  _buildScaleInsight() {
+  Row _buildScaleInsight() {
     return Row(
       children: [
         Spacer(),
@@ -207,16 +207,16 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
               children: <Widget>[
                 Row(
                   children: [
-                    Text("Weight: ", style: Theme.TextStyles.tabSecondary),
-                    Text(snapshot.data.weight.toStringAsFixed(2) + "g",
-                        style: Theme.TextStyles.tabSecondary),
+                    Text('Weight: ', style: theme.TextStyles.tabSecondary),
+                    Text(snapshot.data.weight.toStringAsFixed(2) + 'g',
+                        style: theme.TextStyles.tabSecondary),
                   ],
                 ),
                 Row(
                   children: [
-                    Text("Flow: ", style: Theme.TextStyles.tabSecondary),
-                    Text(snapshot.data.flow.toStringAsFixed(2) + "g/s",
-                        style: Theme.TextStyles.tabSecondary)
+                    Text('Flow: ', style: theme.TextStyles.tabSecondary),
+                    Text(snapshot.data.flow.toStringAsFixed(2) + 'g/s',
+                        style: theme.TextStyles.tabSecondary)
                   ],
                 ),
               ],
@@ -236,24 +236,24 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.Colors.backgroundColor,
+          backgroundColor: theme.Colors.backgroundColor,
           title: Row(
             children: [
-              Text("Coffee", style: Theme.TextStyles.tabSecondary),
+              Text('Coffee', style: theme.TextStyles.tabSecondary),
               Container(
                 width: 30,
               ),
               Flexible(
                 child: RaisedButton(
-                  textColor: Theme.Colors.primaryColor,
+                  textColor: theme.Colors.primaryColor,
                   color: pressAttention
-                      ? Theme.Colors.goodColor
-                      : Theme.Colors.badColor,
+                      ? theme.Colors.goodColor
+                      : theme.Colors.badColor,
                   onPressed: () =>
                       setState(() => pressAttention = !pressAttention),
-                  child: pressAttention ? Text("Start") : Text("Stop"),
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
+                  child: pressAttention ? Text('Start') : Text('Stop'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
               ),
@@ -261,28 +261,28 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
           ),
           bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.tab,
-            indicator: new BubbleTabIndicator(
+            indicator: BubbleTabIndicator(
               indicatorHeight: 25.0,
-              indicatorColor: Theme.Colors.tabColor,
+              indicatorColor: theme.Colors.tabColor,
               tabBarIndicatorSize: TabBarIndicatorSize.tab,
             ),
             tabs: [
               Tab(
                 child: Text(
-                  "Live",
-                  style: Theme.TextStyles.tabLabel,
+                  'Live',
+                  style: theme.TextStyles.tabLabel,
                 ),
               ),
               Tab(
                 child: Text(
-                  "Settings",
-                  style: Theme.TextStyles.tabLabel,
+                  'Settings',
+                  style: theme.TextStyles.tabLabel,
                 ),
               ),
               Tab(
                 child: Text(
-                  "History",
-                  style: Theme.TextStyles.tabLabel,
+                  'History',
+                  style: theme.TextStyles.tabLabel,
                 ),
               ),
             ],
@@ -291,27 +291,27 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
         body: TabBarView(
           children: [
             Container(
-              decoration: new BoxDecoration(
-                gradient: Theme.Colors.ScreenBackground,
+              decoration: BoxDecoration(
+                gradient: theme.Colors.screenBackground,
               ),
               child: Column(
                 children: <Widget>[
                   _buildLiveInsights(),
-                  Theme.Helper.horizontalBorder(),
+                  theme.Helper.horizontalBorder(),
                   _buildScaleInsight(),
                   _buildGraph(),
                 ],
               ),
             ),
             Container(
-              decoration: new BoxDecoration(
-                gradient: Theme.Colors.ScreenBackground,
+              decoration: BoxDecoration(
+                gradient: theme.Colors.screenBackground,
               ),
               child: CoffeeSelectionTab(),
             ),
             Container(
-              decoration: new BoxDecoration(
-                gradient: Theme.Colors.ScreenBackground,
+              decoration: BoxDecoration(
+                gradient: theme.Colors.screenBackground,
               ),
               child: MachineSelectionTab(),
             ),

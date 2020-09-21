@@ -1,4 +1,4 @@
-import 'package:flupresso/model/Coffee.dart';
+import 'package:flupresso/model/coffee.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -7,25 +7,25 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CoffeeService extends ChangeNotifier {
-  Coffee currentCoffee = null;
-  List<Coffee> knownCoffees = List();
+  Coffee currentCoffee;
+  List<Coffee> knownCoffees = [];
   SharedPreferences prefs;
 
   CoffeeService() {
     init();
   }
 
-  init() async {
+  void init() async {
     prefs = await SharedPreferences.getInstance();
     //TODO read coffee
   }
 
   Future<List<String>> getRoasterSuggestions(String query) async {
-    List<Coffee> matches = await fetchCoffees();
+    var matches = await fetchCoffees();
 
-    if (matches.length == 0) {
+    if (matches.isEmpty) {
       //TODO fetch local storage?
-      return List<String>();
+      return <String>[];
     }
 
     //TODO add last used
@@ -37,15 +37,15 @@ class CoffeeService extends ChangeNotifier {
 
   Future<List<String>> getCoffeeSuggestions(
       String query, String roaster) async {
-    List<Coffee> matches = await fetchCoffees();
+    var matches = await fetchCoffees();
 
-    if (matches.length == 0) {
+    if (matches.isEmpty) {
       //TODO fetch local storage?
-      return List<String>();
+      return <String>[];
     }
 
     //TODO add last used
-    if (roaster != null && roaster != "") {
+    if (roaster != null && roaster != '') {
       matches.retainWhere(
           (s) => s.roaster.toLowerCase().contains(roaster.toLowerCase()));
     }
@@ -63,7 +63,7 @@ class CoffeeService extends ChangeNotifier {
 
       List result = await jsonDecode(response.body);
       if (result == null) {
-        return List();
+        return [];
       }
       List coffees = result.map((e) => Coffee.fromJson(e)).toList();
       return coffees;

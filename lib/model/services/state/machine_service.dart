@@ -1,4 +1,4 @@
-import 'package:flupresso/model/Machine.dart';
+import 'package:flupresso/model/machine.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -7,11 +7,11 @@ import 'package:http/http.dart' as http;
 
 class MachineService extends ChangeNotifier {
   static Future<List<String>> getVendorSuggestions(String query) async {
-    List<Machine> matches = await fetchMachines();
+    var matches = await fetchMachines();
 
-    if (matches.length == 0) {
+    if (matches.isEmpty) {
       //TODO fetch local storage?
-      return List<String>();
+      return [];
     }
 
     //TODO add last used
@@ -23,15 +23,15 @@ class MachineService extends ChangeNotifier {
 
   static Future<List<String>> getModellSuggestions(
       String query, String roaster) async {
-    List<Machine> matches = await fetchMachines();
+    var matches = await fetchMachines();
 
-    if (matches.length == 0) {
+    if (matches.isEmpty) {
       //TODO fetch local storage?
-      return List<String>();
+      return [];
     }
 
     //TODO add last used
-    if (roaster != null && roaster != "") {
+    if (roaster != null && roaster != '') {
       matches.retainWhere(
           (s) => s.vendor.toLowerCase().contains(roaster.toLowerCase()));
     }
@@ -50,7 +50,7 @@ class MachineService extends ChangeNotifier {
     if (response.statusCode == 200) {
       List result = await jsonDecode(response.body);
       if (result == null) {
-        return List();
+        return [];
       }
       List machines = result.map((e) => Machine.fromJson(e)).toList();
       return machines;

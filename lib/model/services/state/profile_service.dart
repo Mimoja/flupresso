@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flupresso/model/Profile.dart';
+import 'package:flupresso/model/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,10 +78,10 @@ class ProfileService extends ChangeNotifier {
 }''';
 
   Profile currentProfile;
-  List<Profile> knownProfiles = List();
+  List<Profile> knownProfiles = [];
   SharedPreferences prefs;
 
-  CoffeeService() {
+  ProfileService() {
     Map userMap = jsonDecode(ProfileService.testInput);
     currentProfile = Profile.fromJson(userMap);
     init();
@@ -89,7 +89,7 @@ class ProfileService extends ChangeNotifier {
     log(user.toString());
   }
 
-  init() async {
+  void init() async {
     prefs = await SharedPreferences.getInstance();
     //TODO read profiles
   }

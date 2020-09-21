@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:flupresso/model/services/ble/MachineService.dart';
+import 'package:flupresso/model/services/ble/machine_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
@@ -29,113 +29,113 @@ enum Endpoint {
 }
 
 class DE1 extends ChangeNotifier {
-  static const String ServiceUUID = "0000A000-0000-1000-8000-00805F9B34FB";
+  static const String ServiceUUID = '0000A000-0000-1000-8000-00805F9B34FB';
 
   static var cuuids = {
-    "0000A001-0000-1000-8000-00805F9B34FB": Endpoint.Versions,
-    "0000A002-0000-1000-8000-00805F9B34FB": Endpoint.RequestedState,
-    "0000A003-0000-1000-8000-00805F9B34FB": Endpoint.SetTime,
-    "0000A004-0000-1000-8000-00805F9B34FB": Endpoint.ShotDirectory,
-    "0000A005-0000-1000-8000-00805F9B34FB": Endpoint.ReadFromMMR,
-    "0000A006-0000-1000-8000-00805F9B34FB": Endpoint.WriteToMMR,
-    "0000A007-0000-1000-8000-00805F9B34FB": Endpoint.ShotMapRequest,
-    "0000A008-0000-1000-8000-00805F9B34FB": Endpoint.DeleteShotRange,
-    "0000A009-0000-1000-8000-00805F9B34FB": Endpoint.FWMapRequest,
-    "0000A00A-0000-1000-8000-00805F9B34FB": Endpoint.Temperatures,
-    "0000A00B-0000-1000-8000-00805F9B34FB": Endpoint.ShotSettings,
-    "0000A00C-0000-1000-8000-00805F9B34FB": Endpoint.DeprecatedShotDesc,
-    "0000A00D-0000-1000-8000-00805F9B34FB": Endpoint.ShotSample,
-    "0000A00E-0000-1000-8000-00805F9B34FB": Endpoint.StateInfo,
-    "0000A00F-0000-1000-8000-00805F9B34FB": Endpoint.HeaderWrite,
-    "0000A010-0000-1000-8000-00805F9B34FB": Endpoint.FrameWrite,
-    "0000A011-0000-1000-8000-00805F9B34FB": Endpoint.WaterLevels,
-    "0000A012-0000-1000-8000-00805F9B34FB": Endpoint.Calibration
+    '0000A001-0000-1000-8000-00805F9B34FB': Endpoint.Versions,
+    '0000A002-0000-1000-8000-00805F9B34FB': Endpoint.RequestedState,
+    '0000A003-0000-1000-8000-00805F9B34FB': Endpoint.SetTime,
+    '0000A004-0000-1000-8000-00805F9B34FB': Endpoint.ShotDirectory,
+    '0000A005-0000-1000-8000-00805F9B34FB': Endpoint.ReadFromMMR,
+    '0000A006-0000-1000-8000-00805F9B34FB': Endpoint.WriteToMMR,
+    '0000A007-0000-1000-8000-00805F9B34FB': Endpoint.ShotMapRequest,
+    '0000A008-0000-1000-8000-00805F9B34FB': Endpoint.DeleteShotRange,
+    '0000A009-0000-1000-8000-00805F9B34FB': Endpoint.FWMapRequest,
+    '0000A00A-0000-1000-8000-00805F9B34FB': Endpoint.Temperatures,
+    '0000A00B-0000-1000-8000-00805F9B34FB': Endpoint.ShotSettings,
+    '0000A00C-0000-1000-8000-00805F9B34FB': Endpoint.DeprecatedShotDesc,
+    '0000A00D-0000-1000-8000-00805F9B34FB': Endpoint.ShotSample,
+    '0000A00E-0000-1000-8000-00805F9B34FB': Endpoint.StateInfo,
+    '0000A00F-0000-1000-8000-00805F9B34FB': Endpoint.HeaderWrite,
+    '0000A010-0000-1000-8000-00805F9B34FB': Endpoint.FrameWrite,
+    '0000A011-0000-1000-8000-00805F9B34FB': Endpoint.WaterLevels,
+    '0000A012-0000-1000-8000-00805F9B34FB': Endpoint.Calibration
   };
 
   static Map<Endpoint, String> cuuidLookup = LinkedHashMap.fromEntries(
       cuuids.entries.map((e) => MapEntry(e.value, e.key)));
 
   static Map states = {
-    0x00: "sleep", // 0 Everything is off
-    0x01: "going_to_sleep", // 1 Going to sleep
+    0x00: 'sleep', // 0 Everything is off
+    0x01: 'going_to_sleep', // 1 Going to sleep
     0x02:
-        "idle", // 2 Heaters are controlled, tank water will be heated if required.
+        'idle', // 2 Heaters are controlled, tank water will be heated if required.
     0x03:
-        "busy", // 3 Firmware is doing something you can't interrupt (eg. cooling down water heater after a shot, calibrating sensors on startup).
-    0x04: "espresso", // 4 Making espresso
-    0x05: "steam", // 5 Making steam
-    0x06: "hot_water", // 6 Making hot water
-    0x07: "short_cal", // 7 Running a short calibration
+        'busy', // 3 Firmware is doing something you can't interrupt (eg. cooling down water heater after a shot, calibrating sensors on startup).
+    0x04: 'espresso', // 4 Making espresso
+    0x05: 'steam', // 5 Making steam
+    0x06: 'hot_water', // 6 Making hot water
+    0x07: 'short_cal', // 7 Running a short calibration
     0x08:
-        "self_test", // 8 Checking as much as possible within the firmware. Probably only used during manufacture or repair.
+        'self_test', // 8 Checking as much as possible within the firmware. Probably only used during manufacture or repair.
     0x09:
-        "long_cal", // 9 Long and involved calibration, possibly involving user interaction. (See substates below, for cases like that).
-    0x0a: "descale", // A Descale the whole bang-tooty
-    0x0b: "fatal_error", // B Something has gone horribly wrong
-    0x0c: "init", // C Machine has not been run yet
+        'long_cal', // 9 Long and involved calibration, possibly involving user interaction. (See substates below, for cases like that).
+    0x0a: 'descale', // A Descale the whole bang-tooty
+    0x0b: 'fatal_error', // B Something has gone horribly wrong
+    0x0c: 'init', // C Machine has not been run yet
     0x0d:
-        "no_request", // D State for T_RequestedState. Means nothing is specifically requested
+        'no_request', // D State for T_RequestedState. Means nothing is specifically requested
     0x0e:
-        "skip_to_next", // E In Espresso, skip to next frame. Others, go to Idle if possible
+        'skip_to_next', // E In Espresso, skip to next frame. Others, go to Idle if possible
     0x0f:
-        "hot_water_rinse", // F Produce hot water at whatever temperature is available
-    0x10: "steam_rinse", // 10 Produce a blast of steam
-    0x11: "refill", // 11 Attempting, or needs, a refill.
-    0x12: "clean", // 12 Clean group head
+        'hot_water_rinse', // F Produce hot water at whatever temperature is available
+    0x10: 'steam_rinse', // 10 Produce a blast of steam
+    0x11: 'refill', // 11 Attempting, or needs, a refill.
+    0x12: 'clean', // 12 Clean group head
     0x13:
-        "in_boot_loader", // 13 The main firmware has not run for some reason. Bootloader is active.
-    0x14: "air_purge", // 14 Air purge.
-    0x15: "sched_idle", // 15 Scheduled wake up idle state
+        'in_boot_loader', // 13 The main firmware has not run for some reason. Bootloader is active.
+    0x14: 'air_purge', // 14 Air purge.
+    0x15: 'sched_idle', // 15 Scheduled wake up idle state
   };
 
   static const Map subStates = {
-    0x00: "no_state", // 0 State is not relevant
+    0x00: 'no_state', // 0 State is not relevant
     0x01:
-        "heat_water_tank", // 1 Cold water is not hot enough. Heating hot water tank.
-    0x02: "heat_water_heater", // 2 Warm up hot water heater for shot.
+        'heat_water_tank', // 1 Cold water is not hot enough. Heating hot water tank.
+    0x02: 'heat_water_heater', // 2 Warm up hot water heater for shot.
     0x03:
-        "stabilize_mix_temp", // 3 Stabilize mix temp and get entire water path up to temperature.
+        'stabilize_mix_temp', // 3 Stabilize mix temp and get entire water path up to temperature.
     0x04:
-        "pre_infuse", // 4 Espresso only. Hot Water and Steam will skip this state.
-    0x05: "pour", // 5 Not used in Steam
-    0x06: "flush", // 6 Espresso only, atm
-    0x07: "steaming", // 7 Steam only
-    0x08: "descale_int", // 8 Starting descale
+        'pre_infuse', // 4 Espresso only. Hot Water and Steam will skip this state.
+    0x05: 'pour', // 5 Not used in Steam
+    0x06: 'flush', // 6 Espresso only, atm
+    0x07: 'steaming', // 7 Steam only
+    0x08: 'descale_int', // 8 Starting descale
     0x09:
-        "descale_fill_group", // 9 get some descaling solution into the group and let it sit
-    0x0a: "descale_return", // A descaling internals
-    0x0b: "descale_group", // B descaling group
-    0x0c: "descale_steam", // C descaling steam
-    0x0d: "clean_init", // D Starting clean
-    0x0e: "clean_fill_group", // E Fill the group
-    0x0f: "clean_soak", // F Wait for 60 seconds so we soak the group head
-    0x10: "clean_group", // 10 Flush through group
-    0x11: "paused_refill", // 11 Have we given up on a refill
-    0x12: "paused_steam", // 12 Are we paused in steam?
+        'descale_fill_group', // 9 get some descaling solution into the group and let it sit
+    0x0a: 'descale_return', // A descaling internals
+    0x0b: 'descale_group', // B descaling group
+    0x0c: 'descale_steam', // C descaling steam
+    0x0d: 'clean_init', // D Starting clean
+    0x0e: 'clean_fill_group', // E Fill the group
+    0x0f: 'clean_soak', // F Wait for 60 seconds so we soak the group head
+    0x10: 'clean_group', // 10 Flush through group
+    0x11: 'paused_refill', // 11 Have we given up on a refill
+    0x12: 'paused_steam', // 12 Are we paused in steam?
 
-    200: "error_nan", // 200 Something died with a NaN
-    201: "error_inf", // 201 Something died with an Inf
+    200: 'error_nan', // 200 Something died with a NaN
+    201: 'error_inf', // 201 Something died with an Inf
     202:
-        "error_generic", // 202 An error for which we have no more specific description
+        'error_generic', // 202 An error for which we have no more specific description
     203:
-        "error_acc", // 203 ACC not responding, unlocked, or incorrectly programmed
+        'error_acc', // 203 ACC not responding, unlocked, or incorrectly programmed
     204:
-        "error_tsensor", // 204 We are getting an error that is probably a broken temperature sensor
-    205: "error_psensor", // 205 Pressure sensor error
-    206: "error_wlevel", // 206 Water level sensor error
-    207: "error_dip", // 207 DIP switches told us to wait in the error state.
-    208: "error_assertion", // 208 Assertion failed
-    209: "error_unsafe", // 209 Unsafe value assigned to variable
-    210: "error_invalid_param", // 210 Invalid parameter passed to function
-    211: "error_flash", // 211 Error accessing external flash
-    212: "error_oom", // 212 Could not allocate memory
-    213: "error_deadline", // 213 Realtime deadline missed
+        'error_tsensor', // 204 We are getting an error that is probably a broken temperature sensor
+    205: 'error_psensor', // 205 Pressure sensor error
+    206: 'error_wlevel', // 206 Water level sensor error
+    207: 'error_dip', // 207 DIP switches told us to wait in the error state.
+    208: 'error_assertion', // 208 Assertion failed
+    209: 'error_unsafe', // 209 Unsafe value assigned to variable
+    210: 'error_invalid_param', // 210 Invalid parameter passed to function
+    211: 'error_flash', // 211 Error accessing external flash
+    212: 'error_oom', // 212 Could not allocate memory
+    213: 'error_deadline', // 213 Realtime deadline missed
   };
 
   final Peripheral device;
 
   //TODO do connection tracking
-  PeripheralConnectionState _state;
+  //PeripheralConnectionState _state;
 
   EspressoMachineService service = getIt<EspressoMachineService>();
 
@@ -146,18 +146,18 @@ class DE1 extends ChangeNotifier {
         .observeConnectionState(
             emitCurrentValue: false, completeOnDisconnect: true)
         .listen((connectionState) {
-      log("Peripheral ${device.identifier} connection state is $connectionState");
+      log('Peripheral ${device.identifier} connection state is $connectionState');
       _onStateChange(connectionState);
     });
     device.connect();
   }
 
   void enableNotification(Endpoint e, Function(ByteData) callback) {
-    log("enabeling Notification for " +
+    log('enabeling Notification for ' +
         e.toString() +
-        " (" +
+        ' (' +
         getCharacteristic(e) +
-        ")");
+        ')');
 
     device
         .monitorCharacteristic(ServiceUUID, getCharacteristic(e))
@@ -166,22 +166,22 @@ class DE1 extends ChangeNotifier {
     });
   }
 
-  read(Endpoint e) {
+  Future<CharacteristicWithValue> read(Endpoint e) {
     return device.readCharacteristic(ServiceUUID, getCharacteristic(e));
   }
 
-  write(Endpoint e, Uint8List data) {
+  void write(Endpoint e, Uint8List data) {
     device.writeCharacteristic(ServiceUUID, getCharacteristic(e), data, false);
   }
 
   void tempatureNotification(ByteData value) {}
   void stateNotification(ByteData value) {
-    int state = value.getUint8(0);
-    int subState = value.getUint8(1);
+    var state = value.getUint8(0);
+    var subState = value.getUint8(1);
 
-    log("DE1 is in state: " +
+    log('DE1 is in state: ' +
         states[state] +
-        " substate: " +
+        ' substate: ' +
         subStates[subState]);
 
     switch (state) {
@@ -203,7 +203,7 @@ class DE1 extends ChangeNotifier {
   void requestedState(ByteData value) {
     var state = value.getUint8(0);
 
-    log("DE1 is in requested state: " + states[state]);
+    log('DE1 is in requested state: ' + states[state]);
   }
 
   void waterLevelNotification(ByteData value) {
@@ -225,16 +225,16 @@ class DE1 extends ChangeNotifier {
     var fwChanges = value.getUint8(13);
     var fwSHA = value.getUint32(14);
 
-    log("bleAPIVersion = " + bleAPIVersion.toRadixString(16));
-    log("bleRelease = " + bleRelease.toRadixString(16));
-    log("bleCommits = " + bleCommits.toRadixString(16));
-    log("bleChanges = " + bleChanges.toRadixString(16));
-    log("bleSHA = " + bleSHA.toRadixString(16));
-    log("fwAPIVersion = " + fwAPIVersion.toRadixString(16));
-    log("fwRelease = " + fwRelease.toRadixString(16));
-    log("fwCommits = " + fwCommits.toRadixString(16));
-    log("fwChanges = " + fwChanges.toRadixString(16));
-    log("fwSHA = " + fwSHA.toRadixString(16));
+    log('bleAPIVersion = ' + bleAPIVersion.toRadixString(16));
+    log('bleRelease = ' + bleRelease.toRadixString(16));
+    log('bleCommits = ' + bleCommits.toRadixString(16));
+    log('bleChanges = ' + bleChanges.toRadixString(16));
+    log('bleSHA = ' + bleSHA.toRadixString(16));
+    log('fwAPIVersion = ' + fwAPIVersion.toRadixString(16));
+    log('fwRelease = ' + fwRelease.toRadixString(16));
+    log('fwCommits = ' + fwCommits.toRadixString(16));
+    log('fwChanges = ' + fwChanges.toRadixString(16));
+    log('fwSHA = ' + fwSHA.toRadixString(16));
   }
 
   void shotSampleNotification(ByteData r) {
@@ -276,37 +276,37 @@ class DE1 extends ChangeNotifier {
     var targetEspressoVolume = r.getUint8(6);
     var targetGroupTemp = r.getUint16(7) / (1 << 8);
 
-    log("SteamBits = " + steamBits.toRadixString(16));
-    log("TargetSteamTemp = " + targetSteamTemp.toRadixString(16));
-    log("TargetSteamLength = " + targetSteamLength.toRadixString(16));
-    log("TargetWaterTemp = " + targetWaterTemp.toRadixString(16));
-    log("TargetWaterVolume = " + targetWaterVolume.toRadixString(16));
-    log("TargetWaterLength = " + targetWaterLength.toRadixString(16));
-    log("TargetEspressoVolume = " + targetEspressoVolume.toRadixString(16));
-    log("TargetGroupTemp = " + targetGroupTemp.toString());
+    log('SteamBits = ' + steamBits.toRadixString(16));
+    log('TargetSteamTemp = ' + targetSteamTemp.toRadixString(16));
+    log('TargetSteamLength = ' + targetSteamLength.toRadixString(16));
+    log('TargetWaterTemp = ' + targetWaterTemp.toRadixString(16));
+    log('TargetWaterVolume = ' + targetWaterVolume.toRadixString(16));
+    log('TargetWaterLength = ' + targetWaterLength.toRadixString(16));
+    log('TargetEspressoVolume = ' + targetEspressoVolume.toRadixString(16));
+    log('TargetGroupTemp = ' + targetGroupTemp.toString());
   }
 
   void mmrNotification(ByteData value) {
-    log("Got mmr notification");
+    log('Got mmr notification');
   }
 
   void get ghcMode {
-    log("Reading group head control mode");
+    log('Reading group head control mode');
     mmrRead(0x803820, 0);
   }
 
   void get ghcInstalled {
-    log("Reading whether the group head controller is installed or not");
+    log('Reading whether the group head controller is installed or not');
     mmrRead(0x80381C, 0);
   }
 
   void mmrRead(int address, int length) {
     if (!mmrAvailable) {
-      log("Unable to mmr_read because MMR not available");
+      log('Unable to mmr_read because MMR not available');
       return;
     }
     // 16 byte 00000000000000000000000000000000
-    List<int> buffer = new List<int>.filled(20, 0, growable: true);
+    var buffer = List<int>.filled(20, 0, growable: true);
     buffer[0] = (address >> 16) % 0xFF;
     buffer[1] = (address >> 8) % 0xFF;
     buffer[2] = (address) % 0xFF;
@@ -315,9 +315,9 @@ class DE1 extends ChangeNotifier {
     write(Endpoint.ReadFromMMR, Uint8List.fromList(buffer));
   }
 
-  _onStateChange(PeripheralConnectionState state) async {
-    log("State changed to " + state.toString());
-    _state = state;
+  Future<void> _onStateChange(PeripheralConnectionState state) async {
+    log('State changed to ' + state.toString());
+    //_state = state;
 
     switch (state) {
       case PeripheralConnectionState.connected:
@@ -353,7 +353,7 @@ class DE1 extends ChangeNotifier {
 
         return;
       case PeripheralConnectionState.disconnected:
-        log("de1 disconnected. Destroying");
+        log('de1 disconnected. Destroying');
         notifyListeners();
         return;
       default:
