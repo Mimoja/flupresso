@@ -18,7 +18,7 @@ class ProfileFrame {
   String name;
   int frameNumber;
   double temperature;
-  int duration;
+  double duration;
   ProfileTarget target;
 
   ProfileFrame(this.name, this.frameNumber, this.temperature, this.duration,
@@ -28,8 +28,8 @@ class ProfileFrame {
     return ProfileFrame(
       json['name'] as String,
       json['index'] as int,
-      json['temp'] as double,
-      json['duration'] as int,
+      json['temp'].toDouble(),
+      json['duration'].toDouble(),
       ProfileTarget.fromJson(json['target']),
     );
   }
@@ -63,7 +63,7 @@ class ProfileTarget {
 
   factory ProfileTarget.fromJson(dynamic json) {
     return ProfileTarget(
-      json['value'] as double,
+      json['value'].toDouble(),
       _$enumDecode(_$ProfileType, json['type']),
       json['interpolate'] as bool,
     );
@@ -89,7 +89,7 @@ class ProfileTrigger {
 
   factory ProfileTrigger.fromJson(dynamic json) {
     return ProfileTrigger(
-      json['value'] as double,
+      json['value'].toDouble(),
       json['type'] as ProfileType,
       _$enumDecode(_$ProfileTriggerType, json['operator']),
     );

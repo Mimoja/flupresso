@@ -8,7 +8,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flupresso/ui/screens/coffee_selection.dart';
 import 'package:flupresso/ui/screens/machine_selection.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/theme.dart' as theme;
+import 'package:provider/provider.dart';
+
+import '../theme.dart';
 
 class CoffeeScreen extends StatefulWidget {
   @override
@@ -61,14 +63,14 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
   List<ShotState> dataPoints = [];
   double baseTime;
 
-  List<charts.Series<ShotState, double>> _createData() {
+  List<charts.Series<ShotState, double>> _createData(FluTheme theme) {
     return [
       charts.Series<ShotState, double>(
         id: 'Pressure',
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupPressure,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(theme.Colors.backgroundColor),
+            charts.ColorUtil.fromDartColor(theme.backgroundColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
@@ -77,25 +79,25 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
         domainFn: (ShotState point, _) => point.sampleTime,
         measureFn: (ShotState point, _) => point.groupFlow,
         colorFn: (_, __) =>
-            charts.ColorUtil.fromDartColor(theme.Colors.secondaryColor),
+            charts.ColorUtil.fromDartColor(theme.secondaryColor),
         strokeWidthPxFn: (_, __) => 3,
         data: dataPoints,
       ),
     ];
   }
 
-  Widget _buildGraph() {
+  Widget _buildGraph(FluTheme theme) {
     return Container(
       height: 300,
       margin: const EdgeInsets.only(left: 10.0),
       width: MediaQuery.of(context).size.width - 105,
       decoration: BoxDecoration(
-        color: theme.Colors.tabColor,
+        color: theme.tabColor,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: charts.LineChart(
-        _createData(),
+        _createData(theme),
         animate: true,
         behaviors: [
           // Define one domain and two measure annotations configured to render
@@ -113,11 +115,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             labelStyle: charts.TextStyleSpec(
                 fontSize: 10,
                 color:
-                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.primaryColor)),
             lineStyle: charts.LineStyleSpec(
                 thickness: 0,
                 color:
-                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.primaryColor)),
           ),
         ),
         domainAxis: charts.NumericAxisSpec(
@@ -125,76 +127,76 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             labelStyle: charts.TextStyleSpec(
                 fontSize: 10,
                 color:
-                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.primaryColor)),
             lineStyle: charts.LineStyleSpec(
                 thickness: 0,
                 color:
-                    charts.ColorUtil.fromDartColor(theme.Colors.primaryColor)),
+                    charts.ColorUtil.fromDartColor(theme.primaryColor)),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildLiveInsights() {
+  Widget _buildLiveInsights(FluTheme theme) {
     Widget insights;
     if (machineService.state.shot != null) {
       insights = Column(
         children: [
           Row(
             children: [
-              Text('State: ', style: theme.TextStyles.tabSecondary),
+              Text('State: ', style: theme.tabSecondaryStyle),
               Text(
                   machineService.state.coffeeState
                       .toString()
                       .substring(12)
                       .toUpperCase(),
-                  style: theme.TextStyles.tabPrimary),
+                  style: theme.tabPrimaryStyle),
             ],
           ),
           Row(
             children: [
-              Text('Pressure: ', style: theme.TextStyles.tabSecondary),
+              Text('Pressure: ', style: theme.tabSecondaryStyle),
               Text(
                   machineService.state.shot.groupPressure.toStringAsFixed(1) +
                       ' bar',
-                  style: theme.TextStyles.tabPrimary),
+                  style: theme.tabPrimaryStyle),
             ],
           ),
           Row(
             children: [
-              Text('Flow: ', style: theme.TextStyles.tabSecondary),
+              Text('Flow: ', style: theme.tabSecondaryStyle),
               Text(
                   machineService.state.shot.groupFlow.toStringAsFixed(2) +
                       ' ml/s',
-                  style: theme.TextStyles.tabPrimary),
+                  style: theme.tabPrimaryStyle),
             ],
           ),
           Row(
             children: [
-              Text('Mix Temp: ', style: theme.TextStyles.tabSecondary),
+              Text('Mix Temp: ', style: theme.tabSecondaryStyle),
               Text(machineService.state.shot.mixTemp.toStringAsFixed(2) + ' °C',
-                  style: theme.TextStyles.tabPrimary),
+                  style: theme.tabPrimaryStyle),
             ],
           ),
           Row(
             children: [
-              Text('Head Temp: ', style: theme.TextStyles.tabSecondary),
+              Text('Head Temp: ', style: theme.tabSecondaryStyle),
               Text(
                   machineService.state.shot.headTemp.toStringAsFixed(2) + ' °C',
-                  style: theme.TextStyles.tabPrimary),
+                  style: theme.tabPrimaryStyle),
             ],
           ),
         ],
       );
     } else {
       insights =
-          Text('Machine is not connected', style: theme.TextStyles.tabPrimary);
+          Text('Machine is not connected', style: theme.tabPrimaryStyle);
     }
     return insights;
   }
 
-  Row _buildScaleInsight() {
+  Row _buildScaleInsight(FluTheme theme) {
     return Row(
       children: [
         Spacer(),
@@ -207,16 +209,16 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
               children: <Widget>[
                 Row(
                   children: [
-                    Text('Weight: ', style: theme.TextStyles.tabSecondary),
+                    Text('Weight: ', style: theme.tabSecondaryStyle),
                     Text(snapshot.data.weight.toStringAsFixed(2) + 'g',
-                        style: theme.TextStyles.tabSecondary),
+                        style: theme.tabSecondaryStyle),
                   ],
                 ),
                 Row(
                   children: [
-                    Text('Flow: ', style: theme.TextStyles.tabSecondary),
+                    Text('Flow: ', style: theme.tabSecondaryStyle),
                     Text(snapshot.data.flow.toStringAsFixed(2) + 'g/s',
-                        style: theme.TextStyles.tabSecondary)
+                        style: theme.tabSecondaryStyle)
                   ],
                 ),
               ],
@@ -232,23 +234,25 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Provider.of<FluTheme>(context);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: theme.Colors.backgroundColor,
+          backgroundColor: theme.backgroundColor,
           title: Row(
             children: [
-              Text('Coffee', style: theme.TextStyles.tabSecondary),
+              Text('Coffee', style: theme.tabSecondaryStyle),
               Container(
                 width: 30,
               ),
               Flexible(
                 child: RaisedButton(
-                  textColor: theme.Colors.primaryColor,
+                  textColor: theme.primaryColor,
                   color: pressAttention
-                      ? theme.Colors.goodColor
-                      : theme.Colors.badColor,
+                      ? theme.goodColor
+                      : theme.badColor,
                   onPressed: () =>
                       setState(() => pressAttention = !pressAttention),
                   child: pressAttention ? Text('Start') : Text('Stop'),
@@ -263,26 +267,26 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: BubbleTabIndicator(
               indicatorHeight: 25.0,
-              indicatorColor: theme.Colors.tabColor,
+              indicatorColor: theme.tabColor,
               tabBarIndicatorSize: TabBarIndicatorSize.tab,
             ),
             tabs: [
               Tab(
                 child: Text(
                   'Live',
-                  style: theme.TextStyles.tabLabel,
+                  style: theme.tabLabelStyle,
                 ),
               ),
               Tab(
                 child: Text(
                   'Settings',
-                  style: theme.TextStyles.tabLabel,
+                  style: theme.tabLabelStyle,
                 ),
               ),
               Tab(
                 child: Text(
                   'History',
-                  style: theme.TextStyles.tabLabel,
+                  style: theme.tabLabelStyle,
                 ),
               ),
             ],
@@ -292,26 +296,26 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.screenBackground,
+                gradient: theme.screenBackgroundGradient,
               ),
               child: Column(
                 children: <Widget>[
-                  _buildLiveInsights(),
-                  theme.Helper.horizontalBorder(),
-                  _buildScaleInsight(),
-                  _buildGraph(),
+                  _buildLiveInsights(theme),
+                  theme.buildHorizontalBorder(),
+                  _buildScaleInsight(theme),
+                  _buildGraph(theme),
                 ],
               ),
             ),
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.screenBackground,
+                gradient: theme.screenBackgroundGradient,
               ),
               child: CoffeeSelectionTab(),
             ),
             Container(
               decoration: BoxDecoration(
-                gradient: theme.Colors.screenBackground,
+                gradient: theme.screenBackgroundGradient,
               ),
               child: MachineSelectionTab(),
             ),

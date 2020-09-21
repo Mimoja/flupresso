@@ -3,8 +3,9 @@ import 'package:flupresso/model/services/state/profile_service.dart';
 import 'package:flupresso/service_locator.dart';
 import 'package:flupresso/ui/screens/coffee_screen.dart';
 import 'package:flupresso/ui/screens/water_screen.dart';
+import 'package:flupresso/ui/theme.dart';
 import 'package:flutter/material.dart';
-import 'theme.dart' as theme;
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -34,16 +35,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Widget _buildButton(child, onpress) {
-    var color = theme.Colors.backgroundColor;
+  Widget _buildButton(FluTheme theme, child, onpress) {
     return Container(
         padding: EdgeInsets.all(10.0),
         child: FlatButton(
           onPressed: onpress,
-          color: color,
+          color: theme.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(19.0),
-            side: BorderSide(color: color),
+            side: BorderSide(color: theme.backgroundColor),
           ),
           child: Container(
             height: 50,
@@ -55,6 +55,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Provider.of<FluTheme>(context);
+
     Widget coffee;
     var currentCoffee = coffeeSelection.currentCoffee;
     if (currentCoffee != null) {
@@ -64,14 +66,14 @@ class _HomePageState extends State<HomePage> {
         ),
         Text(
           currentCoffee.roaster,
-          style: theme.TextStyles.tabSecondary,
+          style: theme.tabSecondaryStyle,
         ),
         Spacer(
           flex: 1,
         ),
         Text(
           currentCoffee.name,
-          style: theme.TextStyles.tabSecondary,
+          style: theme.tabSecondaryStyle,
         ),
         Spacer(
           flex: 2,
@@ -80,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       coffee = Text(
         'No Coffee selected',
-        style: theme.TextStyles.tabSecondary,
+        style: theme.tabSecondaryStyle,
       );
     }
     Widget profile;
@@ -88,19 +90,19 @@ class _HomePageState extends State<HomePage> {
     if (currentProfile != null) {
       profile = Text(
         currentProfile.name,
-        style: theme.TextStyles.tabSecondary,
+        style: theme.tabSecondaryStyle,
       );
     } else {
       profile = Text(
         'No Profile selected',
-        style: theme.TextStyles.tabSecondary,
+        style: theme.tabSecondaryStyle,
       );
     }
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: theme.Colors.screenBackground,
+          gradient: theme.screenBackgroundGradient,
         ),
         child: Column(
           children: <Widget>[
@@ -111,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 child: Image(
               image: AssetImage('assets/decent.png'),
               height: 120,
-              color: theme.Colors.primaryColor,
+              color: theme.primaryColor,
             )),
             Spacer(
               flex: 3,
@@ -128,9 +130,10 @@ class _HomePageState extends State<HomePage> {
                 alignment: WrapAlignment.center,
                 children: [
                   _buildButton(
+                    theme,
                     Text(
                       'Espresso',
-                      style: theme.TextStyles.tabSecondary,
+                      style: theme.tabSecondaryStyle,
                     ),
                     () => Navigator.push(
                         context,
@@ -139,9 +142,10 @@ class _HomePageState extends State<HomePage> {
                         )),
                   ),
                   _buildButton(
+                    theme,
                     Text(
                       'Water / Steam / Flush',
-                      style: theme.TextStyles.tabSecondary,
+                      style: theme.tabSecondaryStyle,
                     ),
                     () => Navigator.push(
                       context,
@@ -151,9 +155,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   _buildButton(
+                    theme,
                       Text(
                         'Settings',
-                        style: theme.TextStyles.tabSecondary,
+                        style: theme.tabSecondaryStyle,
                       ),
                       () => {}),
                 ],

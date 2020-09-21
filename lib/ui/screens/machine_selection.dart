@@ -1,7 +1,9 @@
 import 'package:flupresso/model/services/state/machine_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flupresso/ui/theme.dart' as theme;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:provider/provider.dart';
+
+import '../theme.dart';
 
 class MachineSelection {}
 
@@ -21,6 +23,8 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Provider.of<FluTheme>(context);
+
     return Container(
       margin: const EdgeInsets.only(left: 95.0),
       child: Column(
@@ -30,7 +34,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
             textFieldConfiguration: TextFieldConfiguration(
               decoration: InputDecoration(
                 labelText: 'Manufacturer',
-                labelStyle: theme.TextStyles.tabLabel,
+                labelStyle: theme.tabLabelStyle,
                 contentPadding: EdgeInsets.zero,
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -38,7 +42,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
               ),
-              style: theme.TextStyles.tabPrimary,
+              style: theme.tabPrimaryStyle,
               controller: _typeAheadManufacturerController,
             ),
             suggestionsCallback: (pattern) async {
@@ -68,7 +72,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
             textFieldConfiguration: TextFieldConfiguration(
                 decoration: InputDecoration(
                   labelText: 'Model',
-                  labelStyle: theme.TextStyles.tabLabel,
+                  labelStyle: theme.tabLabelStyle,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -77,7 +81,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
                   disabledBorder: InputBorder.none,
                 ),
                 controller: _typeAheadModelController,
-                style: theme.TextStyles.tabSecondary),
+                style: theme.tabSecondaryStyle),
             suggestionsCallback: (pattern) async {
               return MachineService.getModellSuggestions(
                   pattern, _selectedManufacturer);
@@ -103,7 +107,7 @@ class _MachineSelectionTabState extends State<MachineSelectionTab> {
             //onSaved: (value) => this._selectedModel = value,
           ),
           Container(
-              color: theme.Colors.backgroundColor,
+              color: theme.backgroundColor,
               width: 24.0,
               height: 1.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0)),

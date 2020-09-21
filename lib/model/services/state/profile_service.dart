@@ -13,7 +13,7 @@ class ProfileService extends ChangeNotifier {
       "name": "Infuse",
       "index": 0,
       "temp": 90.0,
-      "duration": 7,
+      "duration": 7.0,
       "target": {
         "value": 5.0,
         "type": "flow",
@@ -29,7 +29,7 @@ class ProfileService extends ChangeNotifier {
       "name": "Brew",
       "index": 1,
       "temp": 95.0,
-      "duration": 10,
+      "duration": 10.0,
       "target": {
         "value": 2.0,
         "type": "flow",
@@ -45,7 +45,7 @@ class ProfileService extends ChangeNotifier {
       "name": "Brew",
       "index": 2,
       "temp": 90.0,
-      "duration": 5,
+      "duration": 5.0,
       "target": {
         "value": 2.0,
         "type": "flow",
@@ -55,10 +55,10 @@ class ProfileService extends ChangeNotifier {
     {
       "name": "Brew",
       "index": 3,
-      "temp": 90.0,
+      "temp": 90,
       "duration": 2,
       "target": {
-        "value": 4.0,
+        "value": 4,
         "type": "flow",
         "interpolate": false
       }
@@ -67,7 +67,7 @@ class ProfileService extends ChangeNotifier {
       "name": "Brew",
       "index": 4,
       "temp": 90.0,
-      "duration": 10,
+      "duration": 10.0,
       "target": {
         "value": 2.0,
         "type": "flow",

@@ -1,88 +1,87 @@
 import 'package:flutter/material.dart';
 
-class Colors {
-  const Colors();
+class FluTheme extends ChangeNotifier {
+  var primaryColor = Color(0xFFFFFFFF);
+  var secondaryColor = Color(0xFFF2C230);
+  var backgroundColor = Color(0xFF184059);
+  var tabImageBorder = Color(0xFFFFFFFF);
+  var goodColor = Color(0xFF32C2F0);
+  var badColor = Color(0xFFF28030);
 
-  static const Color primaryColor = Color(0xFFFFFFFF); //Color(0xFFFFFFFF);
-  static const Color secondaryColor = Color(0xFFF2C230);
-  static const Color goodColor = Color(0xFF32C2F0);
-  static const Color badColor = Color(0xFFF28030);
+  Color tabColor;
+  LinearGradient screenBackgroundGradient;
+  TextStyle tabPrimaryStyle;
+  TextStyle tabSecondaryStyle;
+  TextStyle tabTertiaryStyle;
+  TextStyle tabLabelStyle;
 
-  static const Color backgroundColor = Color(0xFF184059); //0xFFFF4580
-  static const Color tabImageBorder = Color(0xFFFFFFFF); // 0xFFFFD2CF
-  static final Color tabImageShadowColor =
-      HSLColor.fromColor(backgroundColor).withLightness(0.7).toColor();
-  static final Color tabShadowColor =
-      HSLColor.fromColor(backgroundColor).withLightness(1).toColor();
+  FluTheme() {
+    var value = HSVColor.fromColor(backgroundColor).value;
+    var top = HSVColor.fromColor(backgroundColor).withValue(value - .05).toColor();
+    var bottom = HSVColor.fromColor(backgroundColor).withValue(value - .1).toColor();
 
-  static final Color tabColor =
-      HSVColor.fromColor(backgroundColor).withValue(_value - .05).toColor();
+    // generate tab and background from our background color
+    tabColor = HSVColor.fromColor(backgroundColor).withValue(value - .05).toColor();
+    screenBackgroundGradient = LinearGradient(
+      colors: [
+        top,
+        backgroundColor,
+        backgroundColor,
+        bottom,
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0, 0.15, 0.4, 1.0],
+      tileMode: TileMode.clamp,
+    );
 
-  static final _value = HSVColor.fromColor(backgroundColor).value;
-  static final _top =
-      HSVColor.fromColor(backgroundColor).withValue(_value - .05).toColor();
-  static final _bottom =
-      HSVColor.fromColor(backgroundColor).withValue(_value - .1).toColor();
+    tabPrimaryStyle =
+        TextStyle(color: primaryColor, fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 28.0);
+    tabSecondaryStyle =
+        TextStyle(color: primaryColor, fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 20.0);
+    tabTertiaryStyle =
+        TextStyle(color: primaryColor, fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 16.0);
+    tabLabelStyle = TextStyle(color: primaryColor, fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 16.0);
+  }
 
-  static final screenBackground = LinearGradient(
-    colors: [
-      _top,
-      backgroundColor,
-      backgroundColor,
-      _bottom,
-    ],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    stops: [0.0, 0.15, 0.4, 1.0],
-    tileMode: TileMode.clamp,
-  );
-}
+  // TODO: if we want to change theme dynamically, implement set() methods and use
+  // ChangeNotifier.notifyListeners()
 
-class Dimens {
-  const Dimens();
-
-  static const imageWidth = 100.0;
-  static const imageHeight = 100.0;
-
-  static const buttonWidth = 60.0;
-  static const buttonHeight = 60.0;
-}
-
-class TextStyles {
-  const TextStyles();
-
-  static const TextStyle tabPrimary = TextStyle(
-      color: Colors.primaryColor,
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w300,
-      fontSize: 28.0);
-
-  static const TextStyle tabSecondary = TextStyle(
-      color: Colors.primaryColor,
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w300,
-      fontSize: 20.0);
-
-  static const TextStyle tabTertiary = TextStyle(
-      color: Colors.primaryColor,
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w300,
-      fontSize: 16.0);
-
-  static const TextStyle tabLabel = TextStyle(
-      color: Colors.primaryColor,
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w300,
-      fontSize: 16.0);
-}
-
-class Helper {
-  static Widget horizontalBorder() {
+  Widget buildHorizontalBorder() {
     return Container(
-      color: Colors.secondaryColor,
+      color: secondaryColor,
       width: 38.0,
       height: 1.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
     );
+  }
+
+  // generates a ThemeData usable by Material based on our own primary and secondary colors
+  ThemeData get themeData {
+    var txtTheme = ThemeData.dark().textTheme.apply(fontFamily: 'Poppins');
+    var txtColor = txtTheme.bodyText1.color;
+    var colorScheme = ColorScheme(
+        brightness: Brightness.dark,
+        primary: primaryColor,
+        primaryVariant: primaryColor,
+        secondary: secondaryColor,
+        secondaryVariant: secondaryColor,
+        background: backgroundColor,
+        surface: backgroundColor,
+        onBackground: txtColor,
+        onSurface: txtColor,
+        onError: primaryColor,
+        onPrimary: primaryColor,
+        onSecondary: primaryColor,
+        error: badColor);
+
+    var t = ThemeData.from(textTheme: txtTheme, colorScheme: colorScheme).copyWith(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        buttonColor: primaryColor,
+        cursorColor: primaryColor,
+        highlightColor: primaryColor,
+        toggleableActiveColor: primaryColor);
+
+    return t;
   }
 }
